@@ -49,6 +49,7 @@ def downloadAddon(url):
 def getSha256(destPath):
 	with open(destPath, "rb") as f:
 		sha256Addon = sha256.sha256_checksum(f)
+		return sha256Addon
 
 def getAddonManifest(destPath):
 	expandedPath = os.path.join(TEMP_DIR, "nvda-addon")
@@ -72,6 +73,12 @@ def main():
 	url = args.file
 	destPath = downloadAddon(url=url)
 	manifest = _getAddonManifest(destPath=destPath)
+	properties = """
+	- name: {name}
+	- Summary: {summary}
+	- Version: {version}
+	""".format(**manifest)
+	return properties
 
 if __name__ == '__main__':
 	main()
