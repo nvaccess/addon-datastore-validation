@@ -1,0 +1,3 @@
+[submodule "configobj"]
+	path = configobj
+	url = https://github.com/DiffSK/configobj
