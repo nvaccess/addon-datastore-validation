@@ -73,7 +73,7 @@ def main():
 	url = args.file
 	destPath = downloadAddon(url=url)
 	manifest = getAddonManifest(destPath=destPath)
-	print manifest[2name"]
+	print (manifest["name"])
 
 
 if __name__ == '__main__':
