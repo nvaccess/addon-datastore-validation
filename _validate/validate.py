@@ -72,6 +72,9 @@ def main():
 	url = args.file
 	destPath = downloadAddon(url=url)
 	manifest = _getAddonManifest(destPath=destPath)
+    with open(manifest.json", "w") as f:
+        json.dump(manifest, f, indent=4)
+
 
 if __name__ == '__main__':
 	main()
