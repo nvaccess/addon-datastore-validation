@@ -72,13 +72,9 @@ def main():
 	args = parser.parse_args()
 	url = args.file
 	destPath = downloadAddon(url=url)
-	manifest = _getAddonManifest(destPath=destPath)
-	properties = """
-	- name: {name}
-	- Summary: {summary}
-	- Version: {version}
-	""".format(**manifest)
-	return properties
+	manifest = getAddonManifest(destPath=destPath)
+	print manifest[2name"]
+
 
 if __name__ == '__main__':
 	main()
