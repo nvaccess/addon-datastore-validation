@@ -74,7 +74,6 @@ def main():
 	destPath = downloadAddon(url=url)
 	manifest = getAddonManifest(destPath=destPath)
 	addonName = manifest["summary"]
-	addonAuthor = manifest["author]"]
 	addonVersion = manifest["version"]
 	metadata = "### Release information\r\n"
 	metadata += f"- Addon name: {addonName}"
