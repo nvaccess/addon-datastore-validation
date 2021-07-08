@@ -73,7 +73,17 @@ def main():
 	url = args.file
 	destPath = downloadAddon(url=url)
 	manifest = getAddonManifest(destPath=destPath)
-	print (manifest["name"])
+	addonName = manifest["summary"]
+	addonAuthor = manifest["author]"]
+	addonVersion = manifest["version"]
+	metadata = "### Release information\r\n"
+	metadata += f"- Addon name: {addonName}"
+	metadata += f"- Addon author: {addonAuthor}"
+	metadata += f"- Addon version: {addonVersion}"
+	with open("metadata.txt", "w", encoding="utf-8"") as f:
+		f.write(metadata)
+
+
 
 
 if __name__ == '__main__':
