@@ -78,7 +78,7 @@ def main():
 	metadata = "### Release information\r\n"
 	metadata += f"- Addon name: {addonName}"
 	metadata += f"- Addon version: {addonVersion}"
-	with open(os.pat.join(os.path.dirname(__file__), "metadata.txt"), "w", encoding="utf-8") as f:
+	with open(os.path.join(os.path.dirname(__file__), "metadata.txt"), "w", encoding="utf-8") as f:
 		f.write(metadata)
 
 
