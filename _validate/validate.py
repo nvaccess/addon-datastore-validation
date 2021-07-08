@@ -78,7 +78,6 @@ def main():
 	addonVersion = manifest["version"]
 	metadata = "### Release information\r\n"
 	metadata += f"- Addon name: {addonName}"
-	metadata += f"- Addon author: {addonAuthor}"
 	metadata += f"- Addon version: {addonVersion}"
 	with open(os.pat.join(os.path.dirname(__file__), "metadata.txt"), "w", encoding="utf-8") as f:
 		f.write(metadata)
