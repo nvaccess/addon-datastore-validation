@@ -38,3 +38,4 @@ jobs:
       shell: cmd
     - name: Generate json file
       run: runcreatejson _tests\testData\fake.nvda-addon
+      shell: cmd
