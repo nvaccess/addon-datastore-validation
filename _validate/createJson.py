@@ -11,6 +11,7 @@ VALID_JSON = os.path.join(
 	os.path.dirname(__file__), "..", "_tests", "testData", "addons", "fake", "13.0.0.json"
 )
 
+
 def getAddonManifest(addonPath: str) -> AddonManifest:
 	""" Extract manifest.ini from *.nvda-addon and parse.
 	Raise on error.
@@ -25,6 +26,7 @@ def getAddonManifest(addonPath: str) -> AddonManifest:
 		return manifest
 	except Exception as err:
 		raise err
+
 
 def getSha256(addonPath):
 	with open(addonPath, "rb") as f:
@@ -45,10 +47,11 @@ def generateJsonFile(addonPath):
 	with open(VALID_JSON, "r") as f:
 		data = json.load(f)
 	del data["sha256-comment"]
+	data["addonId"] = addonId
 	data["displayName"] = addonDisplayName
 	data["description"] = addonDescription
 	data["homepage"] = addonHomepage
-	data["versionName"]= addonVersionNumber
+	data["versionName"] = addonVersionNumber
 	versionMajor = int(addonVersionNumber.split(".")[0])
 	versionMinor = int(addonVersionNumber.split(".")[1])
 	if len(addonVersionNumber.split(".")) > 2:
@@ -64,6 +67,9 @@ def generateJsonFile(addonPath):
 		minVersionPatch = int(addonMinVersion.split(".")[2])
 	else:
 		minVersionPatch = 0
+	data["minNVDAVersion"]["major"] = minVersionMajor
+	data["minNVDAVersion"]["minor"] = minVersionMinor
+	data["minNVDAVersion"]["patch"] = minVersionPatch
 	lastVersionMajor = int(addonLastTestedVersion.split(".")[0])
 	lastVersionMinor = int(addonLastTestedVersion.split(".")[1])
 	if len(addonLastTestedVersion.split(".")) > 2:
@@ -73,13 +79,14 @@ def generateJsonFile(addonPath):
 	data["lastTestedVersion"]["major"] = lastVersionMajor
 	data["lastTestedVersion"]["minor"] = lastVersionMinor
 	data["lastTestedVersion"]["patch"] = lastVersionPatch
-	data["sha256"]= sha256
+	data["sha256"] = sha256
 	dir = os.path.join(os.path.dirname(__file__), "..", "output")
 	if not os.path.isdir(dir):
 		os.makedirs(dir)
 	filename = "output.json"
 	with open(os.path.join(dir, filename), "wt") as f:
 		json.dump(data, f, indent="\t")
+
 
 def main():
 	parser = argparse.ArgumentParser()
@@ -90,6 +97,7 @@ def main():
 	args = parser.parse_args()
 	filename = args.file
 	generateJsonFile(filename)
+
 
 if __name__ == '__main__':
 	main()

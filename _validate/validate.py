@@ -7,9 +7,7 @@
 import argparse
 import os
 import re
-import tempfile
 import typing
-import zipfile
 import json
 import urllib.request
 from jsonschema import validate, exceptions
