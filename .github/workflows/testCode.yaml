@@ -36,4 +36,5 @@ jobs:
     - name: Get sha256
       run: runsha _tests\testData\fake.nvda-addon
       shell: cmd
-      
+    - name: Generate json file
+      run: runcreatejson _tests\testData\fake.nvda-addon
