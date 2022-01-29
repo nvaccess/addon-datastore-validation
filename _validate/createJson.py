@@ -28,13 +28,13 @@ def getAddonManifest(addonPath: str) -> AddonManifest:
 		raise err
 
 
-def getSha256(addonPath):
+def getSha256(addonPath: str) -> str:
 	with open(addonPath, "rb") as f:
 		sha256Addon = sha256.sha256_checksum(f)
 	return sha256Addon
 
 
-def generateJsonFile(addonPath):
+def generateJsonFile(addonPath) -> None:
 	manifest = getAddonManifest(addonPath)
 	sha256 = getSha256(addonPath)
 	addonId = manifest["name"]
@@ -55,7 +55,7 @@ def generateJsonFile(addonPath):
 	versionMajor = int(addonVersionNumber.split(".")[0])
 	versionMinor = int(addonVersionNumber.split(".")[1])
 	if len(addonVersionNumber.split(".")) > 2:
-		versionPatch = int(addonVersionNumber.split(".")[3])
+		versionPatch = int(addonVersionNumber.split(".")[2])
 	else:
 		versionPatch = 0
 	data["addonVersionNumber"]["major"] = versionMajor
@@ -86,6 +86,7 @@ def generateJsonFile(addonPath):
 	filename = "output.json"
 	with open(os.path.join(dir, filename), "wt") as f:
 		json.dump(data, f, indent="\t")
+	print(f"Json file is in {dir}/{filename}.")
 
 
 def main():
