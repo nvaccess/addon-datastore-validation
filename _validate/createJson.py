@@ -34,7 +34,7 @@ def getSha256(addonPath: str) -> str:
 	return sha256Addon
 
 
-def generateJsonFile(addonPath) -> None:
+def generateJsonFile(addonPath, parentDir, channel, publisher, sourceUrl) -> None:
 	manifest = getAddonManifest(addonPath)
 	sha256 = getSha256(addonPath)
 	addonId = manifest["name"]
@@ -61,6 +61,7 @@ def generateJsonFile(addonPath) -> None:
 	data["addonVersionNumber"]["major"] = versionMajor
 	data["addonVersionNumber"]["minor"] = versionMinor
 	data["addonVersionNumber"]["patch"] = versionPatch
+	stringVersion = ".".join([str(versionMajor), str(versionMinor), str(versionPatch)])
 	minVersionMajor = int(addonMinVersion.split(".")[0])
 	minVersionMinor = int(addonMinVersion.split(".")[1])
 	if len(addonMinVersion.split(".")) > 2:
@@ -80,11 +81,17 @@ def generateJsonFile(addonPath) -> None:
 	data["lastTestedVersion"]["minor"] = lastVersionMinor
 	data["lastTestedVersion"]["patch"] = lastVersionPatch
 	data["sha256"] = sha256
-	dir = os.path.join(os.path.dirname(__file__), "..", "output")
+	data["channel"] = channel
+	data["publisher"] = publisher
+	data["sourceURL"] = sourceUrl
+	dir = os.path.join(parentDir, addonId)
 	if not os.path.isdir(dir):
 		os.makedirs(dir)
-	filename = "output.json"
-	with open(os.path.join(dir, filename), "wt") as f:
+	filename = f"{stringVersion}.json"
+	filePath = os.path.join(dir, filename)
+	if os.path.isfile(filePath):
+		raise ValueError("This file was sent before")
+	with open(filePath, "wt") as f:
 		json.dump(data, f, indent="\t")
 	print(f"Json file is in {dir}/{filename}.")
 
@@ -95,9 +102,29 @@ def main():
 		dest="file",
 		help="The add-on (nvda-addon) file to create json from manifest."
 	)
+	parser.add_argument(
+		dest="parentDir",
+		help="Parent directory to store the json file."
+	)
+	parser.add_argument(
+		dest="channel",
+		help="The channel for this release."
+	)
+	parser.add_argument(
+		dest="publisher",
+		help="The publisher for this submission."
+	)
+	parser.add_argument(
+		dest="sourceUrl",
+		help="The URL to review source code."
+	)
 	args = parser.parse_args()
 	filename = args.file
-	generateJsonFile(filename)
+	parentDir = args.parentDir
+	channel = args.channel
+	publisher = args.publisher
+	sourceUrl = args.sourceUrl
+	generateJsonFile(filename, parentDir, channel, publisher, sourceUrl)
 
 
 if __name__ == '__main__':
