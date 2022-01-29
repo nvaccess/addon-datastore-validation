@@ -34,7 +34,7 @@ def getSha256(addonPath: str) -> str:
 	return sha256Addon
 
 
-def generateJsonFile(addonPath, parentDir, channel, publisher, sourceUrl) -> None:
+def generateJsonFile(addonPath, parentDir, channel, publisher, sourceUrl, url) -> None:
 	manifest = getAddonManifest(addonPath)
 	sha256 = getSha256(addonPath)
 	addonId = manifest["name"]
@@ -50,8 +50,9 @@ def generateJsonFile(addonPath, parentDir, channel, publisher, sourceUrl) -> Non
 	data["addonId"] = addonId
 	data["displayName"] = addonDisplayName
 	data["description"] = addonDescription
+	data["URL"] = url
 	data["homepage"] = addonHomepage
-	data["versionName"] = addonVersionNumber
+	data["addonVersionName"] = addonVersionNumber
 	versionMajor = int(addonVersionNumber.split(".")[0])
 	versionMinor = int(addonVersionNumber.split(".")[1])
 	if len(addonVersionNumber.split(".")) > 2:
@@ -118,13 +119,18 @@ def main():
 		dest="sourceUrl",
 		help="The URL to review source code."
 	)
+	parser.add_argument(
+		dest="url",
+		help="URL to download the add-on."
+	)
 	args = parser.parse_args()
 	filename = args.file
 	parentDir = args.parentDir
 	channel = args.channel
 	publisher = args.publisher
 	sourceUrl = args.sourceUrl
-	generateJsonFile(filename, parentDir, channel, publisher, sourceUrl)
+	url = args.url
+	generateJsonFile(filename, parentDir, channel, publisher, sourceUrl, url)
 
 
 if __name__ == '__main__':
