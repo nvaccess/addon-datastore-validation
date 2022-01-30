@@ -37,5 +37,5 @@ jobs:
       run: runsha _tests\testData\fake.nvda-addon
       shell: cmd
     - name: Generate json file
-      run: runcreatejson _tests\testData\fake.nvda-addon
+      run: runcreatejson _tests\testData\fake.nvda-addon stable fakepublisher https://github.com/fake/ https://github.com/fake.nvda-addon
       shell: cmd
