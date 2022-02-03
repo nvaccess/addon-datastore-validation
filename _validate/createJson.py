@@ -90,11 +90,6 @@ def generateJsonFile(addonPath, parentDir, channel, publisher, sourceUrl, url) -
 		os.makedirs(dir)
 	filename = f"{stringVersion}.json"
 	filePath = os.path.join(dir, filename)
-	if os.path.isfile(filePath):
-		with open(filePath, "rt") as f:
-			previousData = json.load(f)
-			previousPublisher = previousData["publisher"]
-		assert publisher == previousData["publisher"], f"publisher should be {previousPublisher}"
 	with open(filePath, "wt") as f:
 		json.dump(data, f, indent="\t")
 	print(f"Json file is in {dir}/{filename}.")
