@@ -1,15 +1,33 @@
+#!/usr/bin/env python
+
+# Copyright (C) 2022 Noelia Ruiz Martínez, NV Access Limited
+# This file may be used under the terms of the GNU General Public License, version 2 or later.
+# For more details see: https://www.gnu.org/licenses/gpl-2.0.html
+
 import json
 import argparse
 import tempfile
 import zipfile
-import sha256
+from dataclasses import dataclass
 import os
-from addonManifest import AddonManifest
+import sys
+sys.path.append(os.path.dirname(__file__))
+# E402 module level import not at top of file
+import sha256  # noqa:E402
+from addonManifest import AddonManifest  # noqa:E402
+del sys.path[-1]
 
 TEMP_DIR = tempfile.gettempdir()
 VALID_JSON = os.path.join(
 	os.path.dirname(__file__), "..", "_tests", "testData", "addons", "fake", "13.0.0.json"
 )
+
+
+@dataclass
+class Version:
+	major: int = 0
+	minor: int = 0
+	patch: int = 0
 
 
 def getAddonManifest(addonPath: str) -> AddonManifest:
@@ -34,7 +52,32 @@ def getSha256(addonPath: str) -> str:
 	return sha256Addon
 
 
-def generateJsonFile(addonPath, parentDir, channel, publisher, sourceUrl, url) -> None:
+def getVersionNumber(ver: str) -> Version:
+	version = Version()
+	verParts = ver.split(".")
+	verLen = len(verParts)
+	if verLen < 2 or verLen > 3:
+		raise ValueError("Version not valid")
+	version.major = int(verParts[0])
+	version.minor = int(verParts[1])
+	if len(verParts) > 2:
+		version.patch = int(verParts[2])
+	return version
+
+
+def getFullQualifiedName(version: Version) -> str:
+	versionParts = []
+	versionParts.append(str(version.major))
+	versionParts.append(str(version.minor))
+	versionParts.append(str(version.patch))
+	stringVersion = ".".join(versionParts)
+	return stringVersion
+
+
+def generateJsonFile(
+		addonPath: str, parentDir: str, channel: str,
+		publisher: str, sourceUrl: str, url: str
+) -> None:
 	manifest = getAddonManifest(addonPath)
 	sha256 = getSha256(addonPath)
 	addonId = manifest["name"]
@@ -53,34 +96,19 @@ def generateJsonFile(addonPath, parentDir, channel, publisher, sourceUrl, url) -
 	data["URL"] = url
 	data["homepage"] = addonHomepage
 	data["addonVersionName"] = addonVersionNumber
-	versionMajor = int(addonVersionNumber.split(".")[0])
-	versionMinor = int(addonVersionNumber.split(".")[1])
-	if len(addonVersionNumber.split(".")) > 2:
-		versionPatch = int(addonVersionNumber.split(".")[2])
-	else:
-		versionPatch = 0
-	data["addonVersionNumber"]["major"] = versionMajor
-	data["addonVersionNumber"]["minor"] = versionMinor
-	data["addonVersionNumber"]["patch"] = versionPatch
-	stringVersion = ".".join([str(versionMajor), str(versionMinor), str(versionPatch)])
-	minVersionMajor = int(addonMinVersion.split(".")[0])
-	minVersionMinor = int(addonMinVersion.split(".")[1])
-	if len(addonMinVersion.split(".")) > 2:
-		minVersionPatch = int(addonMinVersion.split(".")[2])
-	else:
-		minVersionPatch = 0
-	data["minNVDAVersion"]["major"] = minVersionMajor
-	data["minNVDAVersion"]["minor"] = minVersionMinor
-	data["minNVDAVersion"]["patch"] = minVersionPatch
-	lastVersionMajor = int(addonLastTestedVersion.split(".")[0])
-	lastVersionMinor = int(addonLastTestedVersion.split(".")[1])
-	if len(addonLastTestedVersion.split(".")) > 2:
-		lastVersionPatch = int(addonLastTestedVersion.split(".")[2])
-	else:
-		lastVersionPatch = 0
-	data["lastTestedVersion"]["major"] = lastVersionMajor
-	data["lastTestedVersion"]["minor"] = lastVersionMinor
-	data["lastTestedVersion"]["patch"] = lastVersionPatch
+	versionNumber = getVersionNumber(addonVersionNumber)
+	filename = f"{getFullQualifiedName(versionNumber)}.json"
+	data["addonVersionNumber"]["major"] = versionNumber.major
+	data["addonVersionNumber"]["minor"] = versionNumber.minor
+	data["addonVersionNumber"]["patch"] = versionNumber.patch
+	minVersion = getVersionNumber(addonMinVersion)
+	data["minNVDAVersion"]["major"] = minVersion.major
+	data["minNVDAVersion"]["minor"] = minVersion.minor
+	data["minNVDAVersion"]["patch"] = minVersion.patch
+	lastTestedVersion = getVersionNumber(addonLastTestedVersion)
+	data["lastTestedVersion"]["major"] = lastTestedVersion.major
+	data["lastTestedVersion"]["minor"] = lastTestedVersion.minor
+	data["lastTestedVersion"]["patch"] = lastTestedVersion.patch
 	data["sha256"] = sha256
 	data["channel"] = channel
 	data["publisher"] = publisher
@@ -88,7 +116,6 @@ def generateJsonFile(addonPath, parentDir, channel, publisher, sourceUrl, url) -
 	dir = os.path.join(parentDir, addonId)
 	if not os.path.isdir(dir):
 		os.makedirs(dir)
-	filename = f"{stringVersion}.json"
 	filePath = os.path.join(dir, filename)
 	with open(filePath, "wt") as f:
 		json.dump(data, f, indent="\t")
