@@ -48,8 +48,7 @@
 		"URL",
 		"sha256",
 		"sourceURL",
-		"license",
-		"licenseURL"
+		"license"
 	],
 	"properties": {
 		"addonId": {
