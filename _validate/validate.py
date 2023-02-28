@@ -23,6 +23,7 @@ del sys.path[-1]
 
 
 JSON_SCHEMA = os.path.join(os.path.dirname(__file__), "addonVersion_schema.json")
+JSON_VER = os.path.join(os.path.dirname(__file__), "nvdaAPIVersions.json")
 JsonObjT = typing.Dict[str, typing.Any]
 
 
@@ -37,6 +38,13 @@ def getAddonMetadata(filename: str) -> JsonObjT:
 		data: JsonObjT = json.load(f)
 	_validateJson(data)
 	return data
+
+def getExistingVersions(filename: str):
+	"""Loads API versions file and returns as object.
+	"""
+	with open(filename) as f:
+		data: JsonObjT = json.load(f)
+	return (_formatVersionString(version["apiVer"].values()) for version in data)
 
 
 def _validateJson(data: JsonObjT) -> None:
@@ -222,6 +230,11 @@ def checkManifestVersionMatchesVersionName(
 			f" addon manifest: {manifestVersion} vs addonVersionName: {addonVersionName}"
 		)
 
+def checkLastTestedVersionExist(submission):
+	lastTestedVersion: JsonObjT = submission['lastTestedVersion']
+	if not _formatVersionString(lastTestedVersion.values()) in getExistingVersions(JSON_VER):
+		yield _formatVersionString(lastTestedVersion.values())
+		yield list(getExistingVersions(JSON_VER))[-1]
 
 def checkVersions(
 		manifest: AddonManifest,
@@ -236,6 +249,7 @@ def checkVersions(
 	)
 	yield from checkManifestVersionMatchesVersionName(manifest, submission)
 	yield from checkParsedVersionNameMatchesVersionNumber(submission)
+	yield from checkLastTestedVersionExist(submission)
 
 
 def validateSubmission(submissionFilePath: str) -> ValidationErrorGenerator:
