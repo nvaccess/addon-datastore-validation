@@ -230,11 +230,10 @@ def checkManifestVersionMatchesVersionName(
 			f" addon manifest: {manifestVersion} vs addonVersionName: {addonVersionName}"
 		)
 
-def checkLastTestedVersionExist(submission):
+def checkLastTestedVersionExist(submission: JsonObjT) -> ValidationErrorGenerator:
 	lastTestedVersion: JsonObjT = submission['lastTestedVersion']
 	if not _formatVersionString(lastTestedVersion.values()) in getExistingVersions(JSON_VER):
-		yield _formatVersionString(lastTestedVersion.values())
-		yield list(getExistingVersions(JSON_VER))[-1]
+		yield f"{_formatVersionString(lastTestedVersion.values())} doesn't exist"
 
 def checkVersions(
 		manifest: AddonManifest,
