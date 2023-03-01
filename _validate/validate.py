@@ -232,8 +232,17 @@ def checkManifestVersionMatchesVersionName(
 
 def checkLastTestedVersionExist(submission: JsonObjT) -> ValidationErrorGenerator:
 	lastTestedVersion: JsonObjT = submission['lastTestedVersion']
-	if not _formatVersionString(lastTestedVersion.values()) in getExistingVersions(JSON_VER):
-		yield f"{_formatVersionString(lastTestedVersion.values())} doesn't exist"
+	formattedLastTestedVersion: str = _formatVersionString(lastTestedVersion.values())
+	if not  lastFormattedVersion in getExistingVersions(JSON_VER):
+		yield f"{formattedLastVersion} doesn't exist"
+
+def checkMinRequiredVersionExist(submission: JsonObjT) -> ValidationErrorGenerator:
+	minRequiredVersion: JsonObjT = submission["minNVDAVersion"]
+	formattedMinRequiredVersion: str = "0.0.0"
+	if minRequiredVersion["major"] >= 2019 and minRequiredVersion["minor"] >= 3:
+		formattedMinRequiredVersion = _formatVersionString(minRequiredVersion.values())
+	if not formattedMinRequiredVersion in getExistingVersions(JSON_VER):
+		yield f"{formattedMinRequiredVersion} doesn't exist"
 
 def checkVersions(
 		manifest: AddonManifest,
