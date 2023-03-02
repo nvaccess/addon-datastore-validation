@@ -23,7 +23,7 @@ del sys.path[-1]
 
 
 JSON_SCHEMA = os.path.join(os.path.dirname(__file__), "addonVersion_schema.json")
-VERSIONS_URL = "https://raw.githubusercontent.com/nvaccess/addon-datastore-transform/main/nvdaAPIVersions.json"
+VER_URL = "https://raw.githubusercontent.com/nvaccess/addon-datastore-transform/main/nvdaAPIVersions.json"
 
 JsonObjT = typing.Dict[str, typing.Any]
 ValidationErrorGenerator = typing.Generator[str, None, None]
@@ -38,12 +38,14 @@ def getAddonMetadata(filename: str) -> JsonObjT:
 	_validateJson(data)
 	return data
 
+
 def getExistingVersions(verFilename: str) -> typing.List[str]:
 	"""Loads API versions file and returns list of versions formatted as strings.
 	"""
 	with open(verFilename) as f:
 		data: JsonObjT = json.load(f)
 	return (_formatVersionString(version["apiVer"].values()) for version in data)
+
 
 def _validateJson(data: JsonObjT) -> None:
 	""" Ensure that the loaded metadata conforms to the schema.
@@ -69,6 +71,7 @@ def checkDownloadUrlFormat(url: str) -> ValidationErrorGenerator:
 	if not url.endswith(".nvda-addon"):
 		yield "Add-on download url must end with .nvda-addon"
 
+
 def downloadAddon(url: str, destPath: str) -> ValidationErrorGenerator:
 	"""Download the addon file, save as destPath
 	Raise on failure.
@@ -92,6 +95,7 @@ def downloadAddon(url: str, destPath: str) -> ValidationErrorGenerator:
 			read += len(block)
 			local.write(block)
 	return
+
 
 def checkSha256(addonPath: str, expectedSha: str) -> ValidationErrorGenerator:
 	"""Calculate the hash (SHA256) of the *.nvda-addon
@@ -229,7 +233,7 @@ def checkManifestVersionMatchesVersionName(
 def checkLastTestedVersionExist(submission: JsonObjT, verFilename: str) -> ValidationErrorGenerator:
 	lastTestedVersion: JsonObjT = submission['lastTestedVersion']
 	formattedLastTestedVersion: str = _formatVersionString(lastTestedVersion.values())
-	if not  formattedLastTestedVersion in getExistingVersions(verFilename):
+	if formattedLastTestedVersion not in getExistingVersions(verFilename):
 		yield f"{formattedLastTestedVersion} doesn't exist"
 
 def checkMinRequiredVersionExist(submission: JsonObjT, verFilename: str) -> ValidationErrorGenerator:
@@ -237,7 +241,7 @@ def checkMinRequiredVersionExist(submission: JsonObjT, verFilename: str) -> Vali
 	formattedMinRequiredVersion: str = "0.0.0"
 	if minRequiredVersion["major"] >= 2019 and minRequiredVersion["minor"] >= 3:
 		formattedMinRequiredVersion = _formatVersionString(minRequiredVersion.values())
-	if not formattedMinRequiredVersion in getExistingVersions(verFilename):
+	if formattedMinRequiredVersion not in getExistingVersions(verFilename):
 		yield f"{formattedMinRequiredVersion} doesn't exist"
 
 def checkVersions(
@@ -254,6 +258,7 @@ def checkVersions(
 
 	yield from checkManifestVersionMatchesVersionName(manifest, submission)
 	yield from checkParsedVersionNameMatchesVersionNumber(submission)
+
 
 def validateSubmission(submissionFilePath: str) -> ValidationErrorGenerator:
 	try:
@@ -278,7 +283,7 @@ def validateSubmission(submissionFilePath: str) -> ValidationErrorGenerator:
 			print("Sha256 matches")
 
 		versionsDestPath = os.path.join(TEMP_DIR, "nvdaAPIVersions.json")
-		yield from downloadAddon(url=VERSIONS_URL, destPath=versionsDestPath)
+		yield from downloadAddon(url=VER_URL, destPath=versionsDestPath)
 		print("API versions file downloaded successfully")
 		yield from checkLastTestedVersionExist(submissionData, versionsDestPath)
 		yield from checkMinRequiredVersionExist(submissionData, versionsDestPath)
@@ -316,7 +321,7 @@ def main():
 	)
 
 	args = parser.parse_args()
-	filename=args.file
+	filename = args.file
 
 	if not args.dry_run:
 		errors = validateSubmission(filename)

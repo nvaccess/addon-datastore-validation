@@ -1,0 +1,74 @@
+Ensuring NVDA Python virtual environment
+Python version 3.8.0 (tags/v3.8.0:fa919fd, Oct 14 2019, 19:21:23) [MSC v.1916 32 bit (Intel)]
+call flake8 _validate _tests --count --show-source --statistics --tee
+_validate\createJson.py:50:3: E126 continuation line over-indented for hanging indent
+		addonPath: str,
+		^
+_validate\createJson.py:91:3: E126 continuation line over-indented for hanging indent
+		manifest: AddonManifest,
+		^
+_validate\validate.py:26:111: E501 line too long (111 > 110 characters)
+VERSIONS_URL = "https://raw.githubusercontent.com/nvaccess/addon-datastore-transform/main/nvdaAPIVersions.json"
+                                                                                                              ^
+_validate\validate.py:41:1: E302 expected 2 blank lines, found 1
+def getExistingVersions(verFilename: str) -> typing.List[str]:
+^
+_validate\validate.py:48:1: E302 expected 2 blank lines, found 1
+def _validateJson(data: JsonObjT) -> None:
+^
+_validate\validate.py:72:1: E302 expected 2 blank lines, found 1
+def downloadAddon(url: str, destPath: str) -> ValidationErrorGenerator:
+^
+_validate\validate.py:96:1: E302 expected 2 blank lines, found 1
+def checkSha256(addonPath: str, expectedSha: str) -> ValidationErrorGenerator:
+^
+_validate\validate.py:135:3: E126 continuation line over-indented for hanging indent
+		manifest: AddonManifest,
+		^
+_validate\validate.py:188:3: E126 continuation line over-indented for hanging indent
+		submissionFilePath: str,
+		^
+_validate\validate.py:205:3: E126 continuation line over-indented for hanging indent
+		submission: JsonObjT
+		^
+_validate\validate.py:218:3: E126 continuation line over-indented for hanging indent
+		manifest: AddonManifest,
+		^
+_validate\validate.py:229:1: E302 expected 2 blank lines, found 1
+def checkLastTestedVersionExist(submission: JsonObjT, verFilename: str) -> ValidationErrorGenerator:
+^
+_validate\validate.py:232:5: E713 test for membership should be 'not in'
+	if not  formattedLastTestedVersion in getExistingVersions(verFilename):
+	   ^
+_validate\validate.py:232:8: E271 multiple spaces after keyword
+	if not  formattedLastTestedVersion in getExistingVersions(verFilename):
+	      ^
+_validate\validate.py:235:1: E302 expected 2 blank lines, found 1
+def checkMinRequiredVersionExist(submission: JsonObjT, verFilename: str) -> ValidationErrorGenerator:
+^
+_validate\validate.py:240:5: E713 test for membership should be 'not in'
+	if not formattedMinRequiredVersion in getExistingVersions(verFilename):
+	   ^
+_validate\validate.py:243:1: E302 expected 2 blank lines, found 1
+def checkVersions(
+^
+_validate\validate.py:244:3: E126 continuation line over-indented for hanging indent
+		manifest: AddonManifest,
+		^
+_validate\validate.py:258:1: E302 expected 2 blank lines, found 1
+def validateSubmission(submissionFilePath: str) -> ValidationErrorGenerator:
+^
+_validate\validate.py:319:10: E225 missing whitespace around operator
+	filename=args.file
+	        ^
+_tests\test_validate.py:322:4: E126 continuation line over-indented for hanging indent
+			self,
+			^
+8     E126 continuation line over-indented for hanging indent
+1     E225 missing whitespace around operator
+1     E271 multiple spaces after keyword
+8     E302 expected 2 blank lines, found 1
+1     E501 line too long (111 > 110 characters)
+2     E713 test for membership should be 'not in'
+21
+Deactivating NVDA Python virtual environment
