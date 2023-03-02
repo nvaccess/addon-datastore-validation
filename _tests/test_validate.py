@@ -22,6 +22,7 @@ ADDON_PACKAGE = os.path.join(TEST_DATA_PATH, f'{VALID_ADDON_ID}.nvda-addon')
 ADDON_SUBMISSIONS_DIR = os.path.join(TEST_DATA_PATH, 'addons')
 VALID_SUBMISSION_JSON_FILE = os.path.join(ADDON_SUBMISSIONS_DIR, VALID_ADDON_ID, '13.0.0.json')
 MANIFEST_FILE = os.path.join(TEST_DATA_PATH, 'manifest.ini')
+VERSIONS_FILE = os.path.join(TEST_DATA_PATH, 'nvdaAPIVersions.json')
 
 
 def getValidAddonSubmission() -> validate.JsonObjT:
@@ -287,6 +288,90 @@ class VersionNumber:
 	major: int = 0
 	minor: int = 0
 	patch: int = 0
+
+
+class validate_getExistingVersions(unittest.TestCase):
+	"""Tests for the getExistingVersions function."""
+	def setUp(self):
+		self.verFilename = VERSIONS_FILE
+
+	def tearDown(self):
+		self.verFilename = ""
+
+	def test_getExistingVersions(self):
+		formattedVersions = list(validate.getExistingVersions(self.verFilename))
+		self.assertEqual(
+			formattedVersions,
+			["0.0.0", "2019.3.0"]
+			)
+
+
+class validate_checkLastTestedVersionExists(unittest.TestCase):
+	"""Test for the checkLastTestedVersionExists function."""
+	def setUp(self):
+		self.submissionData = getValidAddonSubmission()
+		self.verFilename = VERSIONS_FILE
+
+	def tearDown(self):
+		self.submissionData = None
+		self.verFilename = ""
+
+	def test_valid(self):
+		self.submissionData["lastTestedVersion"]["major"] = 2019
+		self.submissionData["lastTestedVersion"]["minor"] = 3
+		self.submissionData["lastTestedVersion"]["patch"] = 0
+		self.assertEqual(
+			list(validate.checkLastTestedVersionExist(self.submissionData, self.verFilename)),
+			[]
+		)
+
+
+	def test_invalid(self):
+		self.submissionData["lastTestedVersion"]["major"] = 9999
+		self.submissionData["lastTestedVersion"]["minor"] = 3
+		self.submissionData["lastTestedVersion"]["patch"] = 0
+		self.assertEqual(
+			list(validate.checkLastTestedVersionExist(self.submissionData, self.verFilename)),
+			[f"Last tested version error: 9999.3.0 doesn't exist"]
+		)
+
+
+class validate_checkMinRequiredVersionExists(unittest.TestCase):
+	"""Test for the checkMinRequiredVersionExists function."""
+	def setUp(self):
+		self.submissionData = getValidAddonSubmission()
+		self.verFilename = VERSIONS_FILE
+
+	def tearDown(self):
+		self.submissionData = None
+		self.verFilename = ""
+
+	def test_validOld(self):
+		self.submissionData["minNVDAVersion"]["major"] = 2018
+		self.submissionData["minNVDAVersion"]["minor"] = 3
+		self.submissionData["minNVDAVersion"]["patch"] = 0
+		self.assertEqual(
+			list(validate.checkMinRequiredVersionExist(self.submissionData, self.verFilename)),
+			[]
+		)
+
+	def test_validNew(self):
+		self.submissionData["minNVDAVersion"]["major"] = 2019
+		self.submissionData["minNVDAVersion"]["minor"] = 3
+		self.submissionData["minNVDAVersion"]["patch"] = 0
+		self.assertEqual(
+			list(validate.checkMinRequiredVersionExist(self.submissionData, self.verFilename)),
+			[]
+		)
+
+	def test_invalid(self):
+		self.submissionData["minNVDAVersion"]["major"] = 9999
+		self.submissionData["minNVDAVersion"]["minor"] = 3
+		self.submissionData["minNVDAVersion"]["patch"] = 0
+		self.assertEqual(
+			list(validate.checkMinRequiredVersionExist(self.submissionData, self.verFilename)),
+			[f"Minimum required version error: 9999.3.0 doesn't exist"]
+		)
 
 
 class Validate_checkVersions(unittest.TestCase):

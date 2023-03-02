@@ -234,7 +234,7 @@ def checkLastTestedVersionExist(submission: JsonObjT, verFilename: str) -> Valid
 	lastTestedVersion: JsonObjT = submission['lastTestedVersion']
 	formattedLastTestedVersion: str = _formatVersionString(lastTestedVersion.values())
 	if formattedLastTestedVersion not in getExistingVersions(verFilename):
-		yield f"{formattedLastTestedVersion} doesn't exist"
+		yield f"Last tested version error: {formattedLastTestedVersion} doesn't exist"
 
 def checkMinRequiredVersionExist(submission: JsonObjT, verFilename: str) -> ValidationErrorGenerator:
 	minRequiredVersion: JsonObjT = submission["minNVDAVersion"]
@@ -242,7 +242,7 @@ def checkMinRequiredVersionExist(submission: JsonObjT, verFilename: str) -> Vali
 	if minRequiredVersion["major"] >= 2019 and minRequiredVersion["minor"] >= 3:
 		formattedMinRequiredVersion = _formatVersionString(minRequiredVersion.values())
 	if formattedMinRequiredVersion not in getExistingVersions(verFilename):
-		yield f"{formattedMinRequiredVersion} doesn't exist"
+		yield f"Minimum required version error: {formattedMinRequiredVersion} doesn't exist"
 
 def checkVersions(
 		manifest: AddonManifest,
