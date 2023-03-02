@@ -24,5 +24,57 @@
 			"minor": 3,
 			"patch": 0
 		}
+	},
+	{
+		"description": "NVDA 2020.1",
+		"apiVer": {
+			"major": 2020,
+			"minor": 1,
+			"patch": 0
+		},
+		"backCompatTo": {
+			"major": 2019,
+			"minor": 3,
+			"patch": 0
+		}
+	},
+	{
+		"description": "NVDA 2020.2",
+		"apiVer": {
+			"major": 2020,
+			"minor": 2,
+			"patch": 0
+		},
+		"backCompatTo": {
+			"major": 2019,
+			"minor": 3,
+			"patch": 0
+		}
+	},
+	{
+		"description": "NVDA 2020.3",
+		"apiVer": {
+			"major": 2020,
+			"minor": 3,
+			"patch": 0
+		},
+		"backCompatTo": {
+			"major": 2019,
+			"minor": 3,
+			"patch": 0
+		}
+	},
+	{
+		"description": "NVDA 2020.4",
+		"apiVer": {
+			"major": 2020,
+			"minor": 4,
+			"patch": 0
+		},
+		"backCompatTo": {
+			"major": 2019,
+			"minor": 3,
+			"patch": 0
+		}
 	}
 ]

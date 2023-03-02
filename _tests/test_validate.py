@@ -302,8 +302,11 @@ class validate_getExistingVersions(unittest.TestCase):
 		formattedVersions = list(validate.getExistingVersions(self.verFilename))
 		self.assertEqual(
 			formattedVersions,
-			["0.0.0", "2019.3.0"]
-			)
+			list((
+				"0.0.0", "2019.3.0", "2020.1.0",
+				"2020.2.0", "2020.3.0", "2020.4.0"
+			))
+		)
 
 
 class validate_checkLastTestedVersionExists(unittest.TestCase):
@@ -325,14 +328,13 @@ class validate_checkLastTestedVersionExists(unittest.TestCase):
 			[]
 		)
 
-
 	def test_invalid(self):
 		self.submissionData["lastTestedVersion"]["major"] = 9999
 		self.submissionData["lastTestedVersion"]["minor"] = 3
 		self.submissionData["lastTestedVersion"]["patch"] = 0
 		self.assertEqual(
 			list(validate.checkLastTestedVersionExist(self.submissionData, self.verFilename)),
-			[f"Last tested version error: 9999.3.0 doesn't exist"]
+			["Last tested version error: 9999.3.0 doesn't exist"]
 		)
 
 
@@ -370,7 +372,7 @@ class validate_checkMinRequiredVersionExists(unittest.TestCase):
 		self.submissionData["minNVDAVersion"]["patch"] = 0
 		self.assertEqual(
 			list(validate.checkMinRequiredVersionExist(self.submissionData, self.verFilename)),
-			[f"Minimum required version error: 9999.3.0 doesn't exist"]
+			["Minimum required version error: 9999.3.0 doesn't exist"]
 		)
 
 
@@ -625,7 +627,7 @@ class Validate_End2End(unittest.TestCase):
 		"""
 		mock_urlopen.return_value = self.urlOpenResult
 		errors = list(
-			validate.validateSubmission(VALID_SUBMISSION_JSON_FILE)
+			validate.validateSubmission(VALID_SUBMISSION_JSON_FILE, VERSIONS_FILE)
 		)
 		self.assertEqual(list(errors), [])
 
@@ -636,7 +638,7 @@ class Validate_End2End(unittest.TestCase):
 		self.urlOpenResult.code = 404  # add-on not found
 		mock_urlopen.return_value = self.urlOpenResult
 		errors = list(
-			validate.validateSubmission(VALID_SUBMISSION_JSON_FILE)
+			validate.validateSubmission(VALID_SUBMISSION_JSON_FILE, VERSIONS_FILE)
 		)
 		self.assertEqual(
 			list(errors),
