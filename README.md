@@ -17,7 +17,7 @@ The Action aims to validate the metadata of add-ons submitted to
   - The submission addonName matches the manifest summary field
   - The submission description matches the manifest description field
   - The homepage URL matches the manifest URL field
-  - The addon versions match.
+  - The addon versions match, and last tested & minimum required versionsexist in NVDA API versions.
 
 If all is valid, "Congratulations: manifest, metadata and file path are valid" is printed.
 
