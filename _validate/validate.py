@@ -43,7 +43,7 @@ def getExistingVersions(verFilename: str) -> typing.List[str]:
 	"""
 	with open(verFilename) as f:
 		data: JsonObjT = json.load(f)
-	return (_formatVersionString(version["apiVer"].values()) for version in data)
+	return [_formatVersionString(version["apiVer"].values()) for version in data]
 
 
 def _validateJson(data: JsonObjT) -> None:
