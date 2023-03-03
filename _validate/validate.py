@@ -249,13 +249,12 @@ def checkVersions(
 		submissionFilePath: str,
 		submission: JsonObjT
 ) -> ValidationErrorGenerator:
-	"""Check submitted json file name matches the *.nvda-addon manifest name field."""
-
+	"""Check submitted json file name matches the *.nvda-addon manifest name field.
+	"""
 	yield from checkSubmissionFilenameMatchesVersionNumber(
 		submissionFilePath,
 		submission
 	)
-
 	yield from checkManifestVersionMatchesVersionName(manifest, submission)
 	yield from checkParsedVersionNameMatchesVersionNumber(submission)
 
