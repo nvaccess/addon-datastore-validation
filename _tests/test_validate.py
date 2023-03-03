@@ -109,7 +109,7 @@ class Validate_checkDownloadUrlFormat(unittest.TestCase):
 class Validate_checkSha256(unittest.TestCase):
 	"""Tests for the checkSha256 function
 	"""
-	validSha = "755B4A427551C8FB6A8FF46D77752BC8198D4553E5A60B488520B1C77DB2FD11"
+	validSha = "e27fa778cb99f83ececeb0bc089033929eab5a2fa475ce63e68f50b03b6ab585"
 
 	def test_valid(self):
 		errors = validate.checkSha256(
@@ -302,10 +302,7 @@ class validate_getExistingVersions(unittest.TestCase):
 		formattedVersions = list(validate.getExistingVersions(self.verFilename))
 		self.assertEqual(
 			formattedVersions,
-			list((
-				"0.0.0", "2019.3.0", "2020.1.0",
-				"2020.2.0", "2020.3.0", "2020.4.0"
-			))
+			["0.0.0", "2022.1.0", "2023.1.0"]
 		)
 
 
