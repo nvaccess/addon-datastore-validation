@@ -320,8 +320,8 @@ class validate_checkLastTestedVersionExists(unittest.TestCase):
 		self.verFilename = ""
 
 	def test_valid(self):
-		self.submissionData["lastTestedVersion"]["major"] = 2019
-		self.submissionData["lastTestedVersion"]["minor"] = 3
+		self.submissionData["lastTestedVersion"]["major"] = 2023
+		self.submissionData["lastTestedVersion"]["minor"] = 1
 		self.submissionData["lastTestedVersion"]["patch"] = 0
 		self.assertEqual(
 			list(validate.checkLastTestedVersionExist(self.submissionData, self.verFilename)),
@@ -349,8 +349,8 @@ class validate_checkMinRequiredVersionExists(unittest.TestCase):
 		self.verFilename = ""
 
 	def test_validOld(self):
-		self.submissionData["minNVDAVersion"]["major"] = 2018
-		self.submissionData["minNVDAVersion"]["minor"] = 3
+		self.submissionData["minNVDAVersion"]["major"] = 0
+		self.submissionData["minNVDAVersion"]["minor"] = 0
 		self.submissionData["minNVDAVersion"]["patch"] = 0
 		self.assertEqual(
 			list(validate.checkMinRequiredVersionExist(self.submissionData, self.verFilename)),
@@ -358,8 +358,8 @@ class validate_checkMinRequiredVersionExists(unittest.TestCase):
 		)
 
 	def test_validNew(self):
-		self.submissionData["minNVDAVersion"]["major"] = 2019
-		self.submissionData["minNVDAVersion"]["minor"] = 3
+		self.submissionData["minNVDAVersion"]["major"] = 2023
+		self.submissionData["minNVDAVersion"]["minor"] = 1
 		self.submissionData["minNVDAVersion"]["patch"] = 0
 		self.assertEqual(
 			list(validate.checkMinRequiredVersionExist(self.submissionData, self.verFilename)),
