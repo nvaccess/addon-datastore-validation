@@ -316,7 +316,16 @@ class validate_checkLastTestedVersionExists(unittest.TestCase):
 		self.submissionData = None
 		self.verFilename = ""
 
-	def test_valid(self):
+	def test_validOld(self):
+		self.submissionData["lastTestedVersion"]["major"] = 0
+		self.submissionData["lastTestedVersion"]["minor"] = 0
+		self.submissionData["lastTestedVersion"]["patch"] = 0
+		self.assertEqual(
+			list(validate.checkLastTestedVersionExist(self.submissionData, self.verFilename)),
+			[]
+		)
+
+	def test_validNew(self):
 		self.submissionData["lastTestedVersion"]["major"] = 2023
 		self.submissionData["lastTestedVersion"]["minor"] = 1
 		self.submissionData["lastTestedVersion"]["patch"] = 0
@@ -325,7 +334,16 @@ class validate_checkLastTestedVersionExists(unittest.TestCase):
 			[]
 		)
 
-	def test_invalid(self):
+	def test_invalidOld(self):
+		self.submissionData["lastTestedVersion"]["major"] = 2018
+		self.submissionData["lastTestedVersion"]["minor"] = 3
+		self.submissionData["lastTestedVersion"]["patch"] = 0
+		self.assertEqual(
+			list(validate.checkLastTestedVersionExist(self.submissionData, self.verFilename)),
+			["Last tested version error: 2018.3.0 doesn't exist"]
+		)
+
+	def test_invalidNew(self):
 		self.submissionData["lastTestedVersion"]["major"] = 9999
 		self.submissionData["lastTestedVersion"]["minor"] = 3
 		self.submissionData["lastTestedVersion"]["patch"] = 0
@@ -363,7 +381,16 @@ class validate_checkMinRequiredVersionExists(unittest.TestCase):
 			[]
 		)
 
-	def test_invalid(self):
+	def test_invalidOld(self):
+		self.submissionData["minNVDAVersion"]["major"] = 2018
+		self.submissionData["minNVDAVersion"]["minor"] = 3
+		self.submissionData["minNVDAVersion"]["patch"] = 0
+		self.assertEqual(
+			list(validate.checkMinRequiredVersionExist(self.submissionData, self.verFilename)),
+			["Minimum required version error: 2018.3.0 doesn't exist"]
+		)
+
+	def test_invalidNew(self):
 		self.submissionData["minNVDAVersion"]["major"] = 9999
 		self.submissionData["minNVDAVersion"]["minor"] = 3
 		self.submissionData["minNVDAVersion"]["patch"] = 0
