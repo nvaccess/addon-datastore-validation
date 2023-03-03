@@ -32,7 +32,7 @@ To try validating an addon submission on your own machine.
 From cmd.exe:
 
 1. Clone this repo: `git clone https://github.com/nvaccess/addon-datastore-validation.git`
-1. From the repo folder, run: `runvalidate <pathToAddonMetadataFile.json>`
+1. From the repo folder, run: `runvalidate <pathToAddonMetadataFile.json> <pathToFileWithAPIVersions.json>`
 
 ## Run unit tests:
 To test the scripts used in this action, you can run the unit tests.
