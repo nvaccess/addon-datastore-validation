@@ -25,6 +25,7 @@ del sys.path[-1]
 JSON_SCHEMA = os.path.join(os.path.dirname(__file__), "addonVersion_schema.json")
 
 JsonObjT = typing.Dict[str, typing.Any]
+
 ValidationErrorGenerator = typing.Generator[str, None, None]
 
 
@@ -316,8 +317,8 @@ def main():
 		help="The json (.json) file containing add-on metadata."
 	)
 	parser.add_argument(
-		dest="versions",
-		help="The json (.json) file containing API versions."
+		dest="APIVersions",
+		help="The JSON file containing valid NVDA API versions."
 	)
 
 	args = parser.parse_args()
