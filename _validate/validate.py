@@ -25,6 +25,7 @@ del sys.path[-1]
 JSON_SCHEMA = os.path.join(os.path.dirname(__file__), "addonVersion_schema.json")
 JsonObjT = typing.Dict[str, typing.Any]
 
+
 ValidationErrorGenerator = typing.Generator[str, None, None]
 
 
