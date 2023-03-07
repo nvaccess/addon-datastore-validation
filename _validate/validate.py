@@ -323,7 +323,7 @@ def main():
 
 	args = parser.parse_args()
 	filename = args.file
-	verFilename = args.versions
+	verFilename = args.APIVersions
 
 	if not args.dry_run:
 		errors = validateSubmission(filename, verFilename)
