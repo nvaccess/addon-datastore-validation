@@ -296,7 +296,7 @@ def validateSubmission(submissionFilePath: str, verFilename: str) -> ValidationE
 		yield f"Fatal error, unable to continue: {e}"
 
 
-def outputResult(errors: ValidationErrorGenerator, errorFilePath: typing.Optional[str]):
+def outputResult(errors: ValidationErrorGenerator, errorFilePath: typing.Optional[str] = None):
 	errors = list(errors)
 	if len(errors) > 0:
 		print("\r\n".join(errors))
