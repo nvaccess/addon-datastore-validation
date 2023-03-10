@@ -132,7 +132,7 @@ def checkUrlMatchesHomepage(manifest: AddonManifest, submission: JsonObjT) -> Va
 	""" The submission homepage must match the *.nvda-addon manifest url field.
 	"""
 	if manifest["url"] != submission["homepage"]:
-		yield f"Submission 'homepage' must be set to '{manifest['url']}' in json file"
+		yield f"Submission 'homepage' must be set to '{manifest['url']}' in json file instead of {submission['homepage']}"
 
 
 def checkAddonId(
@@ -296,11 +296,13 @@ def validateSubmission(submissionFilePath: str, verFilename: str) -> ValidationE
 		yield f"Fatal error, unable to continue: {e}"
 
 
-def outputResult(errors: ValidationErrorGenerator):
+def outputResult(errors: ValidationErrorGenerator, errorFilePath: typing.Optional[str]):
 	errors = list(errors)
 	if len(errors) > 0:
 		print("\r\n".join(errors))
-		raise ValueError("Submission not valid")
+		if errorFilePath:
+			with open(errorFilePath, "w") as errorFile:
+				errorFile.write("Validation Errors:\n" + "\n- ".join(errors))
 	print("Congratulations: manifest, metadata and file path are valid")
 
 
@@ -320,16 +322,20 @@ def main():
 		dest="APIVersions",
 		help="The JSON file containing valid NVDA API versions."
 	)
+	parser.add_argument(
+		dest="errorOutputFile",
+		help="The text file to output errors from the validation, if any.",
+		default=None,
+	)
 
 	args = parser.parse_args()
 	filename = args.file
 	verFilename = args.APIVersions
+	errorOutputFile = args.errorOutputFile
 
 	if not args.dry_run:
 		errors = validateSubmission(filename, verFilename)
-	else:
-		errors = iter(())
-	outputResult(errors)
+		outputResult(errors, errorOutputFile)
 
 
 if __name__ == '__main__':
