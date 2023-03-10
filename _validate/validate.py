@@ -303,6 +303,7 @@ def outputResult(errors: ValidationErrorGenerator, errorFilePath: typing.Optiona
 		if errorFilePath:
 			with open(errorFilePath, "w") as errorFile:
 				errorFile.write("Validation Errors:\n" + "\n- ".join(errors))
+		raise ValueError("Submission not valid")
 	print("Congratulations: manifest, metadata and file path are valid")
 
 
