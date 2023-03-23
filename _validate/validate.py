@@ -133,7 +133,7 @@ def checkUrlMatchesHomepage(manifest: AddonManifest, submission: JsonObjT) -> Va
 	"""
 	if manifest.get("url") != submission.get("homepage"):
 		yield f"Submission 'homepage' must be set to '{manifest.get('url')}' " \
-			f"in json file instead of {submission.get('homepage')}"
+		f"in json file instead of {submission.get('homepage')}"
 
 
 def checkAddonId(
