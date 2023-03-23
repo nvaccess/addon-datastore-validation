@@ -131,8 +131,9 @@ def checkDescriptionMatches(manifest: AddonManifest, submission: JsonObjT) -> Va
 def checkUrlMatchesHomepage(manifest: AddonManifest, submission: JsonObjT) -> ValidationErrorGenerator:
 	""" The submission homepage must match the *.nvda-addon manifest url field.
 	"""
-	if manifest["url"] != submission["homepage"]:
-		yield f"Submission 'homepage' must be set to '{manifest['url']}' in json file instead of {submission['homepage']}"
+	if manifest.get("url") != submission.get("homepage"):
+		yield f"Submission 'homepage' must be set to '{manifest.get('url')}' " \
+			f"in json file instead of {submission.get('homepage')}"
 
 
 def checkAddonId(
