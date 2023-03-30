@@ -2,11 +2,10 @@
 # This file may be used under the terms of the GNU General Public License, version 2 or later.
 # For more details see: https://www.gnu.org/licenses/gpl-2.0.html
 
-from dataclasses import dataclass
+from typing import NamedTuple
 
 
-@dataclass
-class MajorMinorPatch:
+class MajorMinorPatch(NamedTuple):
 	major: int = 0
 	minor: int = 0
 	patch: int = 0
