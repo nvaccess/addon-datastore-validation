@@ -79,7 +79,7 @@
 			"description": "The addon version being released. Must match the version in the addon manifest and the file name for the submission.",
 			"type": "string",
 			"default": "",
-			"examples: [
+			"examples": [
 				"21.6.0",
 				"21.6",
 				"21.06"
