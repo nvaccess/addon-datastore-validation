@@ -61,6 +61,7 @@ class IntegrationTestCreateJson(unittest.TestCase):
 			url="https://github.com/nvaccess/dont/use/this/address/fake.nvda-addon",
 			licenseName="GPL v2",
 			licenseUrl="https://www.gnu.org/licenses/gpl-2.0.html",
+			legacy=False,
 		)
 		actualJsonPath = os.path.join(self.outputDir, "fake", "13.0.0.json")
 		self.assertTrue(
