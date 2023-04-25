@@ -82,6 +82,11 @@ def _createDictMatchingJsonSchema(
 		licenseUrl: Optional[str],
 ) -> Dict[str, str]:
 	"""Refer to _validate/addonVersion_schema.json"""
+	try:
+		addonVersionNumber = MajorMinorPatch.getFromStr(manifest["version"])
+	except ValueError:
+		manifest._errors = f"Manifest version invalid {addonVersionNumber}"
+		raise
 	addonData = {
 		"addonId": manifest["name"],
 		"displayName": manifest["summary"],
@@ -89,9 +94,7 @@ def _createDictMatchingJsonSchema(
 		"description": manifest["description"],
 		"sha256": sha,
 		"addonVersionName": manifest["version"],
-		"addonVersionNumber": dataclasses.asdict(
-			MajorMinorPatch.getFromStr(manifest["version"])
-		),
+		"addonVersionNumber": dataclasses.asdict(addonVersionNumber),
 		"minNVDAVersion": dataclasses.asdict(
 			MajorMinorPatch(*manifest["minimumNVDAVersion"])
 		),
