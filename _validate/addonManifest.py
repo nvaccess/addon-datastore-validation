@@ -16,7 +16,7 @@ from io import StringIO
 from configobj import ConfigObj
 from configobj.validate import Validator, ValidateError
 
-sys.path.append(os.path.dirname(__file__))  # To allow this module to be run as a script by runcreatejson.bat
+sys.path.append(os.path.dirname(__file__))
 # E402 module level import not at top of file
 from majorMinorPatch import MajorMinorPatch  # noqa:E402
 del sys.path[-1]
