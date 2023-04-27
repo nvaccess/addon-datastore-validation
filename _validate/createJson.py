@@ -108,6 +108,7 @@ def _createDictMatchingJsonSchema(
 		addonData["homepage"] = homepage
 	if licenseUrl:
 		addonData["licenseURL"] = licenseUrl
+
 	return addonData
 
 
