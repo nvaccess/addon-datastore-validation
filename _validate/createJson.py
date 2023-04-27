@@ -35,7 +35,6 @@ def generateJsonFile(
 		url: str,
 		licenseName: str,
 		licenseUrl: typing.Optional[str],
-		legacy: typing.Optional[bool],
 ) -> None:
 	manifest = getAddonManifest(addonPath)
 	data = _createDictMatchingJsonSchema(
@@ -47,7 +46,6 @@ def generateJsonFile(
 		url=url,
 		licenseName=licenseName,
 		licenseUrl=licenseUrl,
-		legacy=legacy,
 	)
 
 	filePath = buildOutputFilePath(data, parentDir)
@@ -78,7 +76,6 @@ def _createDictMatchingJsonSchema(
 		url: str,
 		licenseName: str,
 		licenseUrl: typing.Optional[str],
-		legacy: typing.Optional[bool],
 ) -> typing.Dict[str, str]:
 	"""Refer to _validate/addonVersion_schema.json"""
 	addonData = {
@@ -111,9 +108,6 @@ def _createDictMatchingJsonSchema(
 		addonData["homepage"] = homepage
 	if licenseUrl:
 		addonData["licenseURL"] = licenseUrl
-	if legacy:
-		addonData["legacy"] = True
-
 	return addonData
 
 
@@ -168,12 +162,6 @@ def main():
 		default=None,
 		required=False,
 	)
-	parser.add_argument(
-		"--legacy",
-		action="store_true",
-		default=False,
-		help="Determines if this submission will be marked as legacy."
-	)
 	args = parser.parse_args()
 	generateJsonFile(
 		addonPath=args.file,
@@ -185,7 +173,6 @@ def main():
 		licenseName=args.licenseName,
 		# Convert the case --licUrl='' to --licUrl=None
 		licenseUrl=args.licenseUrl if args.licenseUrl else None,
-		legacy=True if args.legacy else None,
 	)
 
 
