@@ -358,10 +358,10 @@ def main():
 		help="The JSON file containing valid NVDA API versions."
 	)
 	parser.add_argument(
+		"--output",
 		dest="errorOutputFile",
 		help="The text file to output errors from the validation, if any.",
 		default=None,
-		required=False,
 	)
 
 	args = parser.parse_args()
