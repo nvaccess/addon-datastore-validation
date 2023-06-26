@@ -372,7 +372,7 @@ def main():
 	addonFiles: List[str] = glob(args.filePathGlob)
 	verFilename: str = args.APIVersions
 	errorOutputFile: str = args.errorOutputFile
-	if os.path.exists(errorOutputFile):
+	if errorOutputFile and os.path.exists(errorOutputFile):
 		os.remove(errorOutputFile)
 
 	if not args.dry_run:
