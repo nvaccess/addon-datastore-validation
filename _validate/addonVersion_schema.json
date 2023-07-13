@@ -336,12 +336,12 @@
 					"examples": [
 						"Mein Addon"
 					],
-					"title": "The translated display name",
+					"title": "Translated display name",
 					"type": "string"
 				},
 				"description": {
 					"default": "",
-					"description": "The translated description that will be displayed for the addon.",
+					"description": "Translated description that will be displayed for the addon.",
 					"examples": [
 						"erleichtert das Durchführen von xyz"
 					],
