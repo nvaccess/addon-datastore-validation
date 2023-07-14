@@ -44,5 +44,5 @@ def getAddonManifestLocalizations(
 		try:
 			translatedManifest = AddonManifest(translationFile)
 			yield languageCode, translatedManifest
-		except Exception as err:
+		except Exception:
 			print(f"Error in {translationFile}")
