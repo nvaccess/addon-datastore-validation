@@ -41,8 +41,8 @@ def getAddonManifestLocalizations(
 	filePaths = os.path.join(addonFolder, "locale", "*", "manifest.ini")
 	for translationFile in glob(filePaths):
 		languageCode = pathlib.Path(translationFile).parent.name
-		translatedManifest = AddonManifest(translationFile)
 		try:
+			translatedManifest = AddonManifest(translationFile)
 			yield languageCode, translatedManifest
 		except Exception as err:
-			raise err
+			print(f"Error in {translationFile} {err}")

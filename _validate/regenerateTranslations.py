@@ -24,6 +24,8 @@ del sys.path[-1]
 def regenerateJsonFile(filePath: str, errorFilePath: Optional[str]) -> None:
 	with open(filePath) as f:
 		addonData = json.load(f)
+	if addonData.get("legacy"):
+		return
 	addonData["translations"] = []
 	addonFilePath = os.path.join(TEMP_DIR, "addon.nvda-addon")
 	urlretrieve(addonData["URL"], addonFilePath)
@@ -32,7 +34,7 @@ def regenerateJsonFile(filePath: str, errorFilePath: Optional[str]) -> None:
 		if errorFilePath:
 			with open(errorFilePath, "w") as errorFile:
 				errorFile.write(f"Validation Errors:\n{manifest.errors}")
-		raise ValueError(f"Invalid manifest file: {manifest.errors}")
+		return
 
 	for langCode, manifest in getAddonManifestLocalizations(manifest):
 		addonData["translations"].append(
