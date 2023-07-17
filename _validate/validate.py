@@ -10,6 +10,7 @@ import json
 import os
 import re
 import sys
+import tempfile
 from typing import (
 	Any,
 	Dict,
@@ -26,7 +27,7 @@ sys.path.append(os.path.dirname(__file__))  # To allow this module to be run as 
 # E402 module level import not at top of file
 import sha256  # noqa:E402
 from addonManifest import AddonManifest  # noqa:E402
-from manifestLoader import getAddonManifest, TEMP_DIR  # noqa:E402
+from manifestLoader import getAddonManifest  # noqa:E402
 from majorMinorPatch import MajorMinorPatch  # noqa:E402
 del sys.path[-1]
 
@@ -314,7 +315,7 @@ def validateSubmission(submissionFilePath: str, verFilename: str) -> ValidationE
 			yield from urlErrors
 			raise ValueError(submissionData["URL"])
 
-		addonDestPath = os.path.join(TEMP_DIR, "addon.nvda-addon")
+		addonDestPath = os.path.join(tempfile.gettempdir(), "addon.nvda-addon")
 		yield from downloadAddon(url=submissionData["URL"], destPath=addonDestPath)
 
 		checksumErrors = list(checkSha256(addonDestPath, expectedSha=submissionData["sha256"]))

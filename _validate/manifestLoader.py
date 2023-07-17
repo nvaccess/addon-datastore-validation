@@ -9,18 +9,17 @@ from typing import Generator, Tuple
 import zipfile
 from addonManifest import AddonManifest
 import tempfile
-TEMP_DIR = tempfile.gettempdir()
 
 
 def getAddonManifest(addonPath: str) -> AddonManifest:
 	""" Extract manifest.ini from *.nvda-addon and parse.
 	Raise on error.
 	"""
-	expandedPath = os.path.join(TEMP_DIR, "nvda-addon")
+	extractDir = tempfile.gettempdir()
 	with zipfile.ZipFile(addonPath, "r") as z:
 		for info in z.infolist():
-			z.extract(info, expandedPath)
-	filePath = os.path.join(expandedPath, "manifest.ini")
+			z.extract(info, extractDir)
+	filePath = os.path.join(extractDir, "manifest.ini")
 	try:
 		manifest = AddonManifest(filePath)
 		return manifest
