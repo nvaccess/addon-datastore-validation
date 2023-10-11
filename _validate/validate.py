@@ -52,8 +52,16 @@ def getExistingVersions(verFilename: str) -> List[str]:
 	"""Loads API versions file and returns list of versions formatted as strings.
 	"""
 	with open(verFilename) as f:
-		data: JsonObjT = json.load(f)
+		data: List[JsonObjT] = json.load(f)
 	return [_formatVersionString(version["apiVer"].values()) for version in data]
+
+
+def getExistingStableVersions(verFilename: str) -> List[str]:
+	"""Loads API versions file and returns list of stable versions formatted as strings.
+	"""
+	with open(verFilename) as f:
+		data: List[JsonObjT] = json.load(f)
+	return [_formatVersionString(version["apiVer"].values()) for version in data if not version.get("experimental", False)]
 
 
 def _validateJson(data: JsonObjT) -> None:
@@ -276,6 +284,9 @@ def checkLastTestedVersionExist(submission: JsonObjT, verFilename: str) -> Valid
 	formattedLastTestedVersion: str = _formatVersionString(lastTestedVersion.values())
 	if formattedLastTestedVersion not in getExistingVersions(verFilename):
 		yield f"Last tested version error: {formattedLastTestedVersion} doesn't exist"
+	if submission["channel"] == "stable" and formattedLastTestedVersion not in getExistingStableVersions(verFilename):
+		yield f"Last tested version error: {formattedLastTestedVersion} is not stable yet. "
+		"Please submit add-on using the beta or dev channel."
 
 
 def checkMinRequiredVersionExist(submission: JsonObjT, verFilename: str) -> ValidationErrorGenerator:
@@ -283,6 +294,9 @@ def checkMinRequiredVersionExist(submission: JsonObjT, verFilename: str) -> Vali
 	formattedMinRequiredVersion: str = _formatVersionString(minRequiredVersion.values())
 	if formattedMinRequiredVersion not in getExistingVersions(verFilename):
 		yield f"Minimum required version error: {formattedMinRequiredVersion} doesn't exist"
+	if submission["channel"] == "stable" and formattedMinRequiredVersion not in getExistingStableVersions(verFilename):
+		yield f"Minimum required version error: {formattedMinRequiredVersion} is not stable yet. "
+		"Please submit add-on using the beta or dev channel."
 
 
 def checkVersions(
