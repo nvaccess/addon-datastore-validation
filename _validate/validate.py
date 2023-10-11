@@ -293,7 +293,7 @@ def checkLastTestedVersionExist(submission: JsonObjT, verFilename: str) -> Valid
 		submission["channel"] == "stable"
 		and formattedLastTestedVersion not in getExistingStableVersions(verFilename)
 	):
-		yield f"Last tested version error: {formattedLastTestedVersion} is not stable yet. "
+		yield f"Last tested version error: {formattedLastTestedVersion} is not stable yet. " + \
 		"Please submit add-on using the beta or dev channel."
 
 
@@ -307,7 +307,7 @@ def checkMinRequiredVersionExist(submission: JsonObjT, verFilename: str) -> Vali
 		submission["channel"] == "stable"
 		and formattedMinRequiredVersion not in getExistingStableVersions(verFilename)
 	):
-		yield f"Minimum required version error: {formattedMinRequiredVersion} is not stable yet. "
+		yield f"Minimum required version error: {formattedMinRequiredVersion} is not stable yet. " + \
 		"Please submit add-on using the beta or dev channel."
 
 
