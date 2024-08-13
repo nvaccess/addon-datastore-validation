@@ -79,6 +79,7 @@ class IntegrationTestCreateJson(unittest.TestCase):
 			del expectedJson["sha256-comment"]  # remove explanatory comment
 		with open(actualJsonPath) as actualFile:
 			actualJson = json.load(actualFile)
+			del actualJson["submissionTime"]  # remove submission time
 
 		self.assertDictEqual(actualJson, expectedJson)
 
