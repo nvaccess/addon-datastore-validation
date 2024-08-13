@@ -266,14 +266,14 @@
 				"title": "Discussion comment URL",
 				"type": "string"
 			},
-			"timestamp": {
-				"$id": "#/properties/timestamp",
+			"submissionTime": {
+				"$id": "#/properties/submissionTime",
 				"default": 0,
-				"description": "Timestamp in milliseconds, corresponding to the publication date of the add-on",
+				"description": "Timestamp in milliseconds, corresponding to the submission time of the add-on",
 				"examples": [
 					1723523492363.093
 				],
-				"title": "Timestamp in milliseconds",
+				"title": "Submission time",
 				"type": "number"
 			},
 			"vtScanUrl": {
