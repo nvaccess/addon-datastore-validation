@@ -3,6 +3,7 @@
 # Copyright (C) 2022-2024 Noelia Ruiz Martínez, NV Access Limited
 # This file may be used under the terms of the GNU General Public License, version 2 or later.
 # For more details see: https://www.gnu.org/licenses/gpl-2.0.html
+
 import time
 import dataclasses
 import json
@@ -32,8 +33,8 @@ def getSha256(addonPath: str) -> str:
 	return sha256Addon
 
 
-def getCurrentTime() -> float:
-	return time.time() * 1000  # Milliseconds
+def getCurrentTime() -> int:
+	return int(time.gmtime() * 1000)  # Milliseconds
 
 
 def generateJsonFile(
