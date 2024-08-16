@@ -4,7 +4,7 @@
 # This file may be used under the terms of the GNU General Public License, version 2 or later.
 # For more details see: https://www.gnu.org/licenses/gpl-2.0.html
 
-import time
+from time import gmtime, mktime
 import dataclasses
 import json
 import argparse
@@ -34,7 +34,7 @@ def getSha256(addonPath: str) -> str:
 
 
 def getCurrentTime() -> int:
-	return int(time.gmtime() * 1000)  # Milliseconds
+	return int(mktime(gmtime()) * 1000)  # Milliseconds
 
 
 def generateJsonFile(
