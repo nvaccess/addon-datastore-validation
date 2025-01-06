@@ -54,8 +54,8 @@ def getAddonManifestLocalizations(
 
 def normalizeLanguage(lang: str) -> str:
 	"""
-	Normalizes a  language-dialect string  into a standard form we can deal with.
-	Converts  any dash to underline, and makes sure that language is lowercase and dialect is uppercase.
+	Normalizes a language-dialect string  into a standard form we can deal with.
+	Converts any dash to underline, and makes sure that language is lowercase and dialect is uppercase.
 	Based on NVDA`s `languageHandler` module.
 	:param lang: A language code.
 	:return: A normalized language code.
