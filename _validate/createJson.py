@@ -91,8 +91,8 @@ def _createDictMatchingJsonSchema(
 	"""Refer to _validate/addonVersion_schema.json"""
 	try:
 		addonVersionNumber = MajorMinorPatch.getFromStr(manifest["version"])
-	except ValueError:
-		raise ValueError(f"Manifest version invalid {addonVersionNumber}")
+	except ValueError as e:
+		raise ValueError(f"Manifest version invalid {addonVersionNumber}") from e
 
 	try:
 		addonData = {
@@ -115,7 +115,7 @@ def _createDictMatchingJsonSchema(
 			"license": licenseName,
 		}
 	except KeyError as e:
-		raise KeyError(f"Manifest missing required key '{e.args[0]}'.")
+		raise KeyError(f"Manifest missing required key '{e.args[0]}'.") from e
 
 	# Add optional fields
 	homepage = manifest.get("url")
@@ -138,7 +138,7 @@ def _createDictMatchingJsonSchema(
 				}
 			)
 		except KeyError as e:
-			raise KeyError(f"Translation for {langCode} missing required key '{e.args[0]}'.")
+			raise KeyError(f"Translation for {langCode} missing required key '{e.args[0]}'.") from e
 
 	return addonData
 
