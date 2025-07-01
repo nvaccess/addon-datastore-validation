@@ -184,8 +184,8 @@ def checkAddonId(
 		yield (
 			"Submission data 'addonId' field does not match the expected format:"
 			" must start and end with a letter, and contain only letters,"
-			" numbers, and hyphens."
-			f" {submission['addonId']}"
+			" numbers, and hyphens. "
+			f"ID: {submission['addonId']}"
 		)
 
 
