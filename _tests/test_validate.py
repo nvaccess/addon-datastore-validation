@@ -282,6 +282,40 @@ class Validate_checkAddonId(unittest.TestCase):
 			errors
 		)
 
+	def test_invalidAddonIdFormat_spaces(self):
+		""" Error when submission does not include correct addonId format
+		"""
+		self.submissionData['addonId'] = "invalid addon id"
+		errors = list(
+			validate.checkAddonId(self.manifest, VALID_SUBMISSION_JSON_FILE, self.submissionData)
+		)
+
+		self.assertEqual(
+			[  # expected errors
+				"Submission data 'addonId' field does not match the expected format:"
+				" must start and end with a letter, and contain only letters,"
+				" numbers, and hyphens. invalid addon id"
+			],
+			errors
+		)
+
+	def test_invalidAddonIdFormat_invalidStartChar(self):
+		""" Error when submission does not include correct addonId format
+		"""
+		self.submissionData['addonId'] = "1invalid-addon-id"
+		errors = list(
+			validate.checkAddonId(self.manifest, VALID_SUBMISSION_JSON_FILE, self.submissionData)
+		)
+
+		self.assertEqual(
+			[  # expected errors
+				"Submission data 'addonId' field does not match the expected format:"
+				" must start and end with a letter, and contain only letters,"
+				" numbers, and hyphens. invalid addon id"
+			],
+			errors
+		)
+
 
 @dataclass
 class VersionNumber:
