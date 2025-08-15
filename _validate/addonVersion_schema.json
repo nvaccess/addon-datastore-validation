@@ -286,6 +286,20 @@
 			],
 			"title": "VirusTotal scan URL",
 			"type": "string"
+		},
+		"scanResults": {
+			"$id": "#/properties/scanResults",
+			"default": {},
+			"description": "Results from dynamic and static code scanning.",
+			"examples": [
+				{
+					"virusTotal": {},
+					"codeQL-warnings": {},
+					"codeQL-errors": {}
+				}
+			],
+			"title": "Scan results",
+			"type": "object"
 		}
 	},
 	"$defs": {
