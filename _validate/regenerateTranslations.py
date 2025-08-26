@@ -41,9 +41,10 @@ def regenerateJsonFile(filePath: str, errorFilePath: Optional[str]) -> None:
 				"language": langCode,
 				"displayName": manifest["summary"],
 				"description": manifest["description"],
+				"changelog": manifest["changelog"],
 			}
 		)
-	
+
 	with open(filePath, "wt", encoding="utf-8") as f:
 		json.dump(addonData, f, indent="\t", ensure_ascii=False)
 	print(f"Wrote json file: {filePath}")

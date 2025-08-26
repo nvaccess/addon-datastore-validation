@@ -100,6 +100,7 @@ def _createDictMatchingJsonSchema(
 			"displayName": manifest["summary"],
 			"URL": url,
 			"description": manifest["description"],
+			"changelog": manifest["changelog"],
 			"sha256": sha,
 			"addonVersionName": manifest["version"],
 			"addonVersionNumber": dataclasses.asdict(addonVersionNumber),
@@ -135,6 +136,7 @@ def _createDictMatchingJsonSchema(
 					"language": langCode,
 					"displayName": manifest["summary"],
 					"description": manifest["description"],
+					"changelog": manifest["changelog"],
 				}
 			)
 		except KeyError as e:

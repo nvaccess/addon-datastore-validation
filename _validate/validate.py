@@ -148,6 +148,15 @@ def checkDescriptionMatches(manifest: AddonManifest, submission: JsonObjT) -> Va
 			f" Instead got: '{submission['description']}'"
 		)
 
+def checkChangelogMatches(manifest: AddonManifest, submission: JsonObjT) -> ValidationErrorGenerator:
+	""" The submission changelog must match the *.nvda-addon manifest changelog field."""
+	changelog = manifest["changelog"]
+	if changelog != submission["changelog"]:
+		yield (
+			f"Submission 'changelog' must be set to '{changelog}' in json file."
+			f" Instead got: '{submission['changelog']}'"
+		)
+
 
 def checkUrlMatchesHomepage(manifest: AddonManifest, submission: JsonObjT) -> ValidationErrorGenerator:
 	""" The submission homepage must match the *.nvda-addon manifest url field.
@@ -362,6 +371,7 @@ def validateSubmission(submissionFilePath: str, verFilename: str) -> ValidationE
 		manifest = getAddonManifest(addonDestPath)
 		yield from checkSummaryMatchesDisplayName(manifest, submissionData)
 		yield from checkDescriptionMatches(manifest, submissionData)
+		yield from checkChangelogMatches(manifest, submissionData)
 		yield from checkUrlMatchesHomepage(manifest, submissionData)
 		yield from checkAddonId(manifest, submissionFilePath, submissionData)
 		yield from checkMinNVDAVersionMatches(manifest, submissionData)
