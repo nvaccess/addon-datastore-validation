@@ -40,8 +40,7 @@ From cmd.exe:
 
 To test the scripts used in this action, you can run the unit tests.
 
-1. Install [tox](https://pypi.org/project/tox): `pip install tox`
-1. `tox`
+1. Install [uv](https://docs.astral.sh/uv/getting-started/installation/)
 
 ## Python linting
 
