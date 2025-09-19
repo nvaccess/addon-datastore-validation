@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-
-# Copyright (C) 2022-2024 Noelia Ruiz Martínez, NV Access Limited
+# Copyright (C) 2022-2025 Noelia Ruiz Martínez, NV Access Limited
 # This file may be used under the terms of the GNU General Public License, version 2 or later.
 # For more details see: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -8,11 +6,7 @@ import unittest
 import os
 import shutil
 import json
-from _validate import (
-	createJson,
-	addonManifest,
-	manifestLoader,
-)
+from _validate import createJson, addonManifest, manifestLoader
 
 TOP_DIR = os.path.abspath(os.path.dirname(__file__))
 SOURCE_DIR = os.path.dirname(TOP_DIR)
@@ -93,14 +87,25 @@ class Test_buildOutputFilePath(unittest.TestCase):
 
 	def test_validVersion(self):
 		outputFilePath = createJson.buildOutputFilePath(
-			data={
-				"addonId": "testId",
-				"addonVersionNumber": {
-					"major": 1,
-					"minor": 2,
-					"patch": 0,
-				},
-			},
+			data=createJson.AddonData(
+				addonId="addonId",
+				displayName="Addon name",
+				URL="https://example.com",
+				description="Addon description",
+				sha256="sha256checksum",
+				addonVersionName="1.2.0",
+				addonVersionNumber={"major": 1, "minor": 2, "patch": 0},
+				minNVDAVersion={"major": 2023, "minor": 1, "patch": 0},
+				lastTestedVersion={"major": 2023, "minor": 2, "patch": 0},
+				channel="stable",
+				publisher="Name of addon author or organisation",
+				sourceURL="https://example.com",
+				license="GPL v2",
+				homepage="https://example.com",
+				licenseURL="https://www.gnu.org/licenses/gpl-2.0.html",
+				submissionTime=createJson.getCurrentTime(),
+				translations=[],
+			),
 			parentDir=self.outputDir,
 		)
 

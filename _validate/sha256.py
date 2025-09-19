@@ -1,11 +1,9 @@
-#!/usr/bin/env python
-
-# Copyright (C) 2020 NV Access Limited
+# Copyright (C) 2020-2025 NV Access Limited
 # This file may be used under the terms of the GNU General Public License, version 2 or later.
 # For more details see: https://www.gnu.org/licenses/gpl-2.0.html
 
-import hashlib
 import argparse
+import hashlib
 import typing
 
 #: The read size for each chunk read from the file, prevents memory overuse with large files.

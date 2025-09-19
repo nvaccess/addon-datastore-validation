@@ -1,11 +1,11 @@
-#!/usr/bin/env python
-
-# Copyright (C) 2021 Noelia Ruiz Martínez, NV Access Limited
+# Copyright (C) 2021-2025 Noelia Ruiz Martínez, NV Access Limited
 # This file may be used under the terms of the GNU General Public License, version 2 or later.
 # For more details see: https://www.gnu.org/licenses/gpl-2.0.html
+
+from collections.abc import Callable
 from dataclasses import dataclass
 import unittest
-from unittest.mock import patch
+from unittest.mock import NonCallableMock, patch
 import os
 import json
 from jsonschema import exceptions
@@ -40,16 +40,12 @@ def getAddonManifest():
 class Validate_general(unittest.TestCase):
 	def setUp(self):
 		self.submissionData = getValidAddonSubmission()
-		self.manifest = getAddonManifest()
-
-	def tearDown(self):
-		self.submissionData = None
-		self.manifest = None
+		self.manifest: addonManifest.AddonManifest = getAddonManifest()
 
 	def test_validateJson_SchemaNonConformance_Raises(self):
 		self.submissionData["description"] = 3  # should be a string
 		with self.assertRaises(exceptions.ValidationError):
-			validate._validateJson(self.submissionData)
+			validate.validateJson(self.submissionData)
 
 
 class Validate_checkDownloadUrlFormat(unittest.TestCase):
@@ -60,23 +56,17 @@ class Validate_checkDownloadUrlFormat(unittest.TestCase):
 			"https://github.com/nvdaes/clipContentsDesigner/releases/download/13.0/"
 			"clipContentsDesigner-13.0.nvda-addon"
 		)
-		errors = list(
-			validate.checkDownloadUrlFormat(url),
-		)
+		errors = list(validate.checkDownloadUrlFormat(url))
 		self.assertEqual(errors, [])
 
 	def test_minimalRequirementsURL(self):
 		url = "https://something.nvda-addon"
-		errors = list(
-			validate.checkDownloadUrlFormat(url),
-		)
+		errors = list(validate.checkDownloadUrlFormat(url))
 		self.assertEqual(errors, [])
 
 	def test_missingHTTPS(self):
 		url = "http://something.nvda-addon"
-		errors = list(
-			validate.checkDownloadUrlFormat(url),
-		)
+		errors = list(validate.checkDownloadUrlFormat(url))
 		self.assertEqual(
 			errors,
 			["Add-on download url must start with https://"],
@@ -84,9 +74,7 @@ class Validate_checkDownloadUrlFormat(unittest.TestCase):
 
 	def test_missingExt(self):
 		url = "https://example.com"
-		errors = list(
-			validate.checkDownloadUrlFormat(url),
-		)
+		errors = list(validate.checkDownloadUrlFormat(url))
 		self.assertEqual(
 			errors,
 			["Add-on download url must end with .nvda-addon"],
@@ -94,9 +82,7 @@ class Validate_checkDownloadUrlFormat(unittest.TestCase):
 
 	def test_missingHTTPsAndExt(self):
 		url = "http://example.com"
-		errors = list(
-			validate.checkDownloadUrlFormat(url),
-		)
+		errors = list(validate.checkDownloadUrlFormat(url))
 		self.assertEqual(
 			errors,
 			[
@@ -142,22 +128,14 @@ class Validate_checkSummaryMatchesDisplayName(unittest.TestCase):
 		self.submissionData = getValidAddonSubmission()
 		self.manifest = getAddonManifest()
 
-	def tearDown(self):
-		self.submissionData = None
-		self.manifest = None
-
 	def test_valid(self):
-		errors = list(
-			validate.checkSummaryMatchesDisplayName(self.manifest, self.submissionData),
-		)
+		errors = list(validate.checkSummaryMatchesDisplayName(self.manifest, self.submissionData))
 		self.assertEqual(errors, [])
 
 	def test_invalid(self):
 		badDisplayName = "bad display Name"
 		self.submissionData["displayName"] = badDisplayName
-		errors = list(
-			validate.checkSummaryMatchesDisplayName(self.manifest, self.submissionData),
-		)
+		errors = list(validate.checkSummaryMatchesDisplayName(self.manifest, self.submissionData))
 		self.assertEqual(
 			errors,
 			[
@@ -172,22 +150,14 @@ class Validate_checkDescriptionMatches(unittest.TestCase):
 		self.submissionData = getValidAddonSubmission()
 		self.manifest = getAddonManifest()
 
-	def tearDown(self):
-		self.submissionData = None
-		self.manifest = None
-
 	def test_valid(self):
-		errors = list(
-			validate.checkDescriptionMatches(self.manifest, self.submissionData),
-		)
+		errors = list(validate.checkDescriptionMatches(self.manifest, self.submissionData))
 		self.assertEqual(errors, [])
 
 	def test_invalid(self):
 		badDesc = "bad description"
 		self.submissionData["description"] = badDesc
-		errors = list(
-			validate.checkDescriptionMatches(self.manifest, self.submissionData),
-		)
+		errors = list(validate.checkDescriptionMatches(self.manifest, self.submissionData))
 		self.assertEqual(
 			errors,
 			[
@@ -209,15 +179,9 @@ class Validate_checkAddonId(unittest.TestCase):
 		self.submissionData = getValidAddonSubmission()
 		self.manifest = getAddonManifest()
 
-	def tearDown(self):
-		self.submissionData = None
-		self.manifest = None
-
 	def test_valid(self):
 		"""No error when manifest 'name', submission file path, and submission contents all agree."""
-		errors = list(
-			validate.checkAddonId(self.manifest, VALID_SUBMISSION_JSON_FILE, self.submissionData),
-		)
+		errors = list(validate.checkAddonId(self.manifest, VALID_SUBMISSION_JSON_FILE, self.submissionData))
 		self.assertEqual(
 			[  # expected errors
 			],
@@ -225,13 +189,11 @@ class Validate_checkAddonId(unittest.TestCase):
 		)
 
 	@patch("os.path.basename", return_value="valid1-Addon_id")
-	def test_valid_withSymbols(self, mock_basename):
+	def test_valid_withSymbols(self, mock_basename: NonCallableMock):
 		"""Error when submission does not include correct addonId format"""
 		self.submissionData["addonId"] = "valid1-Addon_id"
 		self.manifest["name"] = "valid1-Addon_id"
-		errors = list(
-			validate.checkAddonId(self.manifest, VALID_SUBMISSION_JSON_FILE, self.submissionData),
-		)
+		errors = list(validate.checkAddonId(self.manifest, VALID_SUBMISSION_JSON_FILE, self.submissionData))
 
 		self.assertEqual(
 			[  # expected errors
@@ -242,9 +204,7 @@ class Validate_checkAddonId(unittest.TestCase):
 	def test_invalidPath(self):
 		"""Error when submission path does not include correct addon ID"""
 		filename = os.path.join(TOP_DIR, "invalid")
-		errors = list(
-			validate.checkAddonId(self.manifest, filename, self.submissionData),
-		)
+		errors = list(validate.checkAddonId(self.manifest, filename, self.submissionData))
 		self.assertEqual(
 			[  # expected errors
 				(  # invalidPathError
@@ -259,9 +219,7 @@ class Validate_checkAddonId(unittest.TestCase):
 		"""Error when submission does not include correct addonId"""
 		invalidID = "invalid"
 		self.submissionData["addonId"] = invalidID
-		errors = list(
-			validate.checkAddonId(self.manifest, VALID_SUBMISSION_JSON_FILE, self.submissionData),
-		)
+		errors = list(validate.checkAddonId(self.manifest, VALID_SUBMISSION_JSON_FILE, self.submissionData))
 
 		self.assertEqual(
 			[  # expected errors
@@ -277,9 +235,7 @@ class Validate_checkAddonId(unittest.TestCase):
 		"""Error when submission does not include correct addonId and file path does not include the addonID"""
 		expectedAddonId = "valid"
 		self.manifest["name"] = expectedAddonId
-		errors = list(
-			validate.checkAddonId(self.manifest, VALID_SUBMISSION_JSON_FILE, self.submissionData),
-		)
+		errors = list(validate.checkAddonId(self.manifest, VALID_SUBMISSION_JSON_FILE, self.submissionData))
 
 		self.assertEqual(
 			[  # expected errors
@@ -295,13 +251,11 @@ class Validate_checkAddonId(unittest.TestCase):
 		)
 
 	@patch("os.path.basename", return_value="invalid addon id")
-	def test_invalidAddonIdFormat_spaces(self, mock_basename):
+	def test_invalidAddonIdFormat_spaces(self, mock_basename: NonCallableMock):
 		"""Error when submission does not include correct addonId format"""
 		self.submissionData["addonId"] = "invalid addon id"
 		self.manifest["name"] = "invalid addon id"
-		errors = list(
-			validate.checkAddonId(self.manifest, VALID_SUBMISSION_JSON_FILE, self.submissionData),
-		)
+		errors = list(validate.checkAddonId(self.manifest, VALID_SUBMISSION_JSON_FILE, self.submissionData))
 
 		self.assertEqual(
 			[  # expected errors
@@ -314,13 +268,11 @@ class Validate_checkAddonId(unittest.TestCase):
 		)
 
 	@patch("os.path.basename", return_value="1invalid-addon-id")
-	def test_invalidAddonIdFormat_invalidStartChar(self, mock_basename):
+	def test_invalidAddonIdFormat_invalidStartChar(self, mock_basename: NonCallableMock):
 		"""Error when submission does not include correct addonId format"""
 		self.submissionData["addonId"] = "1invalid-addon-id"
 		self.manifest["name"] = "1invalid-addon-id"
-		errors = list(
-			validate.checkAddonId(self.manifest, VALID_SUBMISSION_JSON_FILE, self.submissionData),
-		)
+		errors = list(validate.checkAddonId(self.manifest, VALID_SUBMISSION_JSON_FILE, self.submissionData))
 
 		self.assertEqual(
 			[  # expected errors
@@ -363,10 +315,6 @@ class validate_checkLastTestedVersionExists(unittest.TestCase):
 	def setUp(self):
 		self.submissionData = getValidAddonSubmission()
 		self.verFilename = VERSIONS_FILE
-
-	def tearDown(self):
-		self.submissionData = None
-		self.verFilename = ""
 
 	def test_validOld(self):
 		self.submissionData["lastTestedVersion"]["major"] = 0
@@ -435,10 +383,6 @@ class validate_checkMinRequiredVersionExists(unittest.TestCase):
 		self.submissionData = getValidAddonSubmission()
 		self.verFilename = VERSIONS_FILE
 
-	def tearDown(self):
-		self.submissionData = None
-		self.verFilename = ""
-
 	def test_validOld(self):
 		self.submissionData["minNVDAVersion"]["major"] = 0
 		self.submissionData["minNVDAVersion"]["minor"] = 0
@@ -506,21 +450,13 @@ class Validate_checkMinNVDAVersionMatches(unittest.TestCase):
 		self.submissionData = getValidAddonSubmission()
 		self.manifest = getAddonManifest()
 
-	def tearDown(self):
-		self.submissionData = None
-		self.manifest = None
-
 	def test_valid(self):
-		errors = list(
-			validate.checkMinNVDAVersionMatches(self.manifest, self.submissionData),
-		)
+		errors = list(validate.checkMinNVDAVersionMatches(self.manifest, self.submissionData))
 		self.assertEqual(errors, [])
 
 	def test_invalid(self):
 		self.manifest["minimumNVDAVersion"] = (1999, 1, 0)
-		errors = list(
-			validate.checkMinNVDAVersionMatches(self.manifest, self.submissionData),
-		)
+		errors = list(validate.checkMinNVDAVersionMatches(self.manifest, self.submissionData))
 		self.assertEqual(
 			errors,
 			[
@@ -537,21 +473,13 @@ class Validate_checkLastTestedNVDAVersionMatches(unittest.TestCase):
 		self.submissionData = getValidAddonSubmission()
 		self.manifest = getAddonManifest()
 
-	def tearDown(self):
-		self.submissionData = None
-		self.manifest = None
-
 	def test_valid(self):
-		errors = list(
-			validate.checkLastTestedNVDAVersionMatches(self.manifest, self.submissionData),
-		)
+		errors = list(validate.checkLastTestedNVDAVersionMatches(self.manifest, self.submissionData))
 		self.assertEqual(errors, [])
 
 	def test_invalid(self):
 		self.manifest["lastTestedNVDAVersion"] = (9999, 1, 0)
-		errors = list(
-			validate.checkLastTestedNVDAVersionMatches(self.manifest, self.submissionData),
-		)
+		errors = list(validate.checkLastTestedNVDAVersionMatches(self.manifest, self.submissionData))
 		self.assertEqual(
 			errors,
 			[
@@ -584,10 +512,6 @@ class Validate_checkVersions(unittest.TestCase):
 		self.manifest = getAddonManifest()
 		self.fileName = ""
 
-	def tearDown(self):
-		self.submissionData = None
-		self.manifest = None
-
 	def _setupVersions(
 		self,
 		submissionFileNameVer: str,
@@ -616,9 +540,7 @@ class Validate_checkVersions(unittest.TestCase):
 			versionName=versionName,
 			manifestVersion=versionName,
 		)
-		errors = list(
-			validate.checkVersions(self.manifest, self.fileName, self.submissionData),
-		)
+		errors = list(validate.checkVersions(self.manifest, self.fileName, self.submissionData))
 		self.assertEqual([], errors)
 
 	def test_fileNameMustMatchVerNum(self):
@@ -632,9 +554,7 @@ class Validate_checkVersions(unittest.TestCase):
 			versionName=versionName,
 			manifestVersion=versionName,
 		)
-		errors = list(
-			validate.checkVersions(self.manifest, self.fileName, self.submissionData),
-		)
+		errors = list(validate.checkVersions(self.manifest, self.fileName, self.submissionData))
 		self.assertEqual(
 			[  # expected errors
 				"Submission filename and versionNumber mismatch error:"
@@ -656,9 +576,7 @@ class Validate_checkVersions(unittest.TestCase):
 			versionName=versionName,
 			manifestVersion=versionName,
 		)
-		errors = list(
-			validate.checkVersions(self.manifest, self.fileName, self.submissionData),
-		)
+		errors = list(validate.checkVersions(self.manifest, self.fileName, self.submissionData))
 		self.assertEqual(
 			[  # expected errors
 				"Submission filename and versionNumber mismatch error:"
@@ -677,9 +595,7 @@ class Validate_checkVersions(unittest.TestCase):
 			versionName="13.06",
 			manifestVersion="13.06",
 		)
-		errors = list(
-			validate.checkVersions(self.manifest, self.fileName, self.submissionData),
-		)
+		errors = list(validate.checkVersions(self.manifest, self.fileName, self.submissionData))
 		self.assertEqual(
 			[],
 			errors,
@@ -693,13 +609,8 @@ class Validate_checkVersions(unittest.TestCase):
 			versionName="13.06.5",
 			manifestVersion="13.06.5",
 		)
-		errors = list(
-			validate.checkVersions(self.manifest, self.fileName, self.submissionData),
-		)
-		self.assertEqual(
-			[],
-			errors,
-		)
+		errors = list(validate.checkVersions(self.manifest, self.fileName, self.submissionData))
+		self.assertEqual([], errors)
 
 	def test_unparseableVersionName(self):
 		"""Error when versionName include characters unable to be parsed to numeric form.
@@ -711,9 +622,7 @@ class Validate_checkVersions(unittest.TestCase):
 			versionName="13.06-NG",
 			manifestVersion="13.06-NG",
 		)
-		errors = list(
-			validate.checkVersions(self.manifest, self.fileName, self.submissionData),
-		)
+		errors = list(validate.checkVersions(self.manifest, self.fileName, self.submissionData))
 		self.assertEqual(
 			[  # expected errors
 				(
@@ -735,9 +644,7 @@ class Validate_checkVersions(unittest.TestCase):
 			versionName=versionName,
 			manifestVersion=versionName,
 		)
-		errors = list(
-			validate.checkVersions(self.manifest, self.fileName, self.submissionData),
-		)
+		errors = list(validate.checkVersions(self.manifest, self.fileName, self.submissionData))
 		self.assertEqual(
 			[  # expected errors
 				(
@@ -758,9 +665,7 @@ class Validate_checkVersions(unittest.TestCase):
 			versionName="12.2",
 			manifestVersion="13.2",
 		)
-		errors = list(
-			validate.checkVersions(self.manifest, self.fileName, self.submissionData),
-		)
+		errors = list(validate.checkVersions(self.manifest, self.fileName, self.submissionData))
 		self.assertEqual(
 			[  # expected errors
 				(
@@ -774,7 +679,7 @@ class Validate_checkVersions(unittest.TestCase):
 
 class Validate_End2End(unittest.TestCase):
 	class OpenUrlResult:
-		def __init__(self, readFunc):
+		def __init__(self, readFunc: Callable[[], bytes]) -> None:
 			self.read = readFunc
 			self.code = 200
 			self.headers = {
@@ -789,22 +694,18 @@ class Validate_End2End(unittest.TestCase):
 		self.addonReader.close()
 
 	@patch("_validate.validate.urllib.request.urlopen")
-	def test_success(self, mock_urlopen):
+	def test_success(self, mock_urlopen: NonCallableMock):
 		"""Run validate on a known good file."""
 		mock_urlopen.return_value = self.urlOpenResult
-		errors = list(
-			validate.validateSubmission(VALID_SUBMISSION_JSON_FILE, VERSIONS_FILE),
-		)
+		errors = list(validate.validateSubmission(VALID_SUBMISSION_JSON_FILE, VERSIONS_FILE))
 		self.assertEqual(list(errors), [])
 
 	@patch("_validate.validate.urllib.request.urlopen")
-	def test_downloadFailure(self, mock_urlopen):
+	def test_downloadFailure(self, mock_urlopen: NonCallableMock):
 		"""Unable to download addon"""
 		self.urlOpenResult.code = 404  # add-on not found
 		mock_urlopen.return_value = self.urlOpenResult
-		errors = list(
-			validate.validateSubmission(VALID_SUBMISSION_JSON_FILE, VERSIONS_FILE),
-		)
+		errors = list(validate.validateSubmission(VALID_SUBMISSION_JSON_FILE, VERSIONS_FILE))
 		self.assertEqual(
 			errors,
 			[
@@ -855,6 +756,7 @@ class VersionRegex(unittest.TestCase):
 		ver = "23.5.1"
 		matches = validate.VERSION_PARSE.match(ver)
 		self.assertTrue(matches)
+		assert matches
 		groups = list(x for x in matches.groups() if x)
 		self.assertEqual(
 			["23", "5", "1"],
@@ -865,6 +767,7 @@ class VersionRegex(unittest.TestCase):
 		ver = "6.0"
 		matches = validate.VERSION_PARSE.match(ver)
 		self.assertTrue(matches)
+		assert matches
 		groups = list(x for x in matches.groups() if x)
 		self.assertEqual(
 			["6", "0"],
@@ -875,6 +778,7 @@ class VersionRegex(unittest.TestCase):
 		ver = "1"
 		matches = validate.VERSION_PARSE.match(ver)
 		self.assertTrue(matches)
+		assert matches
 		groups = list(x for x in matches.groups() if x)
 		self.assertEqual(
 			["1"],
