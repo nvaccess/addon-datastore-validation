@@ -9,16 +9,14 @@ from _validate.majorMinorPatch import MajorMinorPatch
 
 class Test_getVersionNumber(unittest.TestCase):
 	def test_tripleDigitVersion_isValid(self):
-		""" Canonical version (major, minor, patch) expected.
-		"""
+		"""Canonical version (major, minor, patch) expected."""
 		versionNumber = MajorMinorPatch.getFromStr("1.2.3")
 		self.assertEqual(versionNumber.major, 1)
 		self.assertEqual(versionNumber.minor, 2)
 		self.assertEqual(versionNumber.patch, 3)
 
 	def test_doubleDigitVersion_isValid(self):
-		"""patch is optional, assumed to be zero.
-		"""
+		"""patch is optional, assumed to be zero."""
 		versionNumber = MajorMinorPatch.getFromStr("1.02")
 		self.assertEqual(versionNumber.major, 1)
 		self.assertEqual(versionNumber.minor, 2)
@@ -35,5 +33,6 @@ class Test_getVersionNumber(unittest.TestCase):
 	def test_versionWithNonDigit(self):
 		with self.assertRaises(
 			ValueError,
-			msg="Non-digit chars in version number expected as an error."):
+			msg="Non-digit chars in version number expected as an error.",
+		):
 			MajorMinorPatch.getFromStr("1.2.3a")

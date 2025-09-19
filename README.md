@@ -13,7 +13,7 @@ The Action aims to validate the metadata of add-ons submitted to
     * The `*.nvda-addon` file can be downloaded
   * The Sha256 of the downloaded `*.nvda-addon` file matches.
 * Check data matches the addon's manifest file.
-  * The manifest exists in the downloaded `*.nvda-addon` file and can be loaded by the `AddonManifest` class. 
+  * The manifest exists in the downloaded `*.nvda-addon` file and can be loaded by the `AddonManifest` class.
   * The submission addonName matches the manifest summary field
   * The submission description matches the manifest description field
   * The homepage URL matches the manifest URL field

@@ -11,25 +11,25 @@ import json
 from _validate import (
 	createJson,
 	addonManifest,
-	manifestLoader
+	manifestLoader,
 )
 
 TOP_DIR = os.path.abspath(os.path.dirname(__file__))
 SOURCE_DIR = os.path.dirname(TOP_DIR)
-INPUT_DATA_PATH = os.path.join(SOURCE_DIR, '_tests', 'testData')
+INPUT_DATA_PATH = os.path.join(SOURCE_DIR, "_tests", "testData")
 VALID_JSON = os.path.join(
 	INPUT_DATA_PATH,
 	"addons",
 	"fake",
-	"13.0.0.json"
+	"13.0.0.json",
 )  # json file available in testData/fake
-ADDON_PACKAGE = os.path.join(INPUT_DATA_PATH, 'fake.nvda-addon')
-MANIFEST_FILE = os.path.join(INPUT_DATA_PATH, 'manifest.ini')
+ADDON_PACKAGE = os.path.join(INPUT_DATA_PATH, "fake.nvda-addon")
+MANIFEST_FILE = os.path.join(INPUT_DATA_PATH, "manifest.ini")
 ADDON_CHANNEL = "testChannel"
 ADDON_PUBLISHER = "testPublisher"
 ADDON_SOURCE_URL = "https://example.com/"
 
-OUTPUT_DATA_PATH = os.path.join(SOURCE_DIR, '_tests', 'testOutput')
+OUTPUT_DATA_PATH = os.path.join(SOURCE_DIR, "_tests", "testOutput")
 
 
 def getAddonManifest():
@@ -39,10 +39,11 @@ def getAddonManifest():
 
 
 class IntegrationTestCreateJson(unittest.TestCase):
-	""" Integration tests.
+	"""Integration tests.
 	- The JSON file is created (written to the filesystem).
 	- The output is then loaded and checked for correctness.
 	"""
+
 	def setUp(self):
 		self.outputDir = os.path.join(OUTPUT_DATA_PATH, "createJsonOutput")
 		self.maxDiff = None  # Permit unittest.TestCase (base class) to calculate diffs of any lengths.
@@ -68,12 +69,11 @@ class IntegrationTestCreateJson(unittest.TestCase):
 		actualJsonPath = os.path.join(self.outputDir, "fake", "13.0.0.json")
 		self.assertTrue(
 			os.path.isfile(actualJsonPath),
-			f"Failed to create json file: {actualJsonPath}"
+			f"Failed to create json file: {actualJsonPath}",
 		)
 		self._assertJsonFilesEqual(actualJsonPath=actualJsonPath, expectedJsonPath=VALID_JSON)
 
 	def _assertJsonFilesEqual(self, actualJsonPath: str, expectedJsonPath: str):
-
 		# Not equal, how are they different?
 		with open(VALID_JSON, encoding="utf-8") as expectedFile:
 			expectedJson = json.load(expectedFile)
@@ -99,9 +99,9 @@ class Test_buildOutputFilePath(unittest.TestCase):
 					"major": 1,
 					"minor": 2,
 					"patch": 0,
-				}
+				},
 			},
-			parentDir=self.outputDir
+			parentDir=self.outputDir,
 		)
 
 		dir, filename = os.path.split(outputFilePath)
@@ -109,7 +109,7 @@ class Test_buildOutputFilePath(unittest.TestCase):
 		self.assertEqual(
 			filename,
 			"1.2.0.json",
-			msg="Name of the output file should be named based on version number"
+			msg="Name of the output file should be named based on version number",
 		)
 
 

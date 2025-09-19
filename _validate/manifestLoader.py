@@ -10,11 +10,12 @@ from typing import Generator, Tuple
 import zipfile
 from addonManifest import AddonManifest
 import tempfile
+
 TEMP_DIR = tempfile.gettempdir()
 
 
 def getAddonManifest(addonPath: str) -> AddonManifest:
-	""" Extract manifest.ini from *.nvda-addon and parse.
+	"""Extract manifest.ini from *.nvda-addon and parse.
 	Raise on error.
 	"""
 	extractDir = os.path.join(TEMP_DIR, "tempAddon")
@@ -33,9 +34,9 @@ def getAddonManifest(addonPath: str) -> AddonManifest:
 
 
 def getAddonManifestLocalizations(
-		manifest: AddonManifest
+	manifest: AddonManifest,
 ) -> Generator[Tuple[str, AddonManifest], None, None]:
-	""" Extract data from translated manifest.ini from *.nvda-addon and parse.
+	"""Extract data from translated manifest.ini from *.nvda-addon and parse.
 	Raise on error.
 	"""
 	if manifest.filename is None:

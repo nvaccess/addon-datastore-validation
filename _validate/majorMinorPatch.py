@@ -20,7 +20,7 @@ class MajorMinorPatch:
 		return cls(
 			major=int(versionParts[0]),
 			minor=int(versionParts[1]),
-			patch=0 if len(versionParts) == 2 else int(versionParts[2])
+			patch=0 if len(versionParts) == 2 else int(versionParts[2]),
 		)
 
 	def __str__(self) -> str:

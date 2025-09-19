@@ -24,6 +24,7 @@ from addonManifest import AddonManifest  # noqa:E402
 from manifestLoader import getAddonManifest, getAddonManifestLocalizations  # noqa:E402
 from majorMinorPatch import MajorMinorPatch  # noqa:E402
 import sha256  # noqa:E402
+
 del sys.path[-1]
 
 
@@ -38,15 +39,15 @@ def getCurrentTime() -> int:
 
 
 def generateJsonFile(
-		manifest: AddonManifest,
-		addonPath: str,
-		parentDir: str,
-		channel: str,
-		publisher: str,
-		sourceUrl: str,
-		url: str,
-		licenseName: str,
-		licenseUrl: Optional[str],
+	manifest: AddonManifest,
+	addonPath: str,
+	parentDir: str,
+	channel: str,
+	publisher: str,
+	sourceUrl: str,
+	url: str,
+	licenseName: str,
+	licenseUrl: Optional[str],
 ) -> None:
 	data = _createDictMatchingJsonSchema(
 		manifest=manifest,
@@ -69,24 +70,22 @@ def generateJsonFile(
 def buildOutputFilePath(data, parentDir) -> os.PathLike:
 	addonDir = os.path.join(parentDir, data["addonId"])
 	versionNumber = MajorMinorPatch(**data["addonVersionNumber"])
-	canonicalVersionString = ".".join(
-		(str(i) for i in dataclasses.astuple(versionNumber))
-	)
+	canonicalVersionString = ".".join((str(i) for i in dataclasses.astuple(versionNumber)))
 	if not os.path.isdir(addonDir):
 		os.makedirs(addonDir)
-	filePath = os.path.join(addonDir, f'{canonicalVersionString}.json')
+	filePath = os.path.join(addonDir, f"{canonicalVersionString}.json")
 	return cast(os.PathLike, filePath)
 
 
 def _createDictMatchingJsonSchema(
-		manifest: AddonManifest,
-		sha: str,
-		channel: str,
-		publisher: str,
-		sourceUrl: str,
-		url: str,
-		licenseName: str,
-		licenseUrl: Optional[str],
+	manifest: AddonManifest,
+	sha: str,
+	channel: str,
+	publisher: str,
+	sourceUrl: str,
+	url: str,
+	licenseName: str,
+	licenseUrl: Optional[str],
 ) -> Dict[str, str]:
 	"""Refer to _validate/addonVersion_schema.json"""
 	try:
@@ -104,10 +103,10 @@ def _createDictMatchingJsonSchema(
 			"addonVersionName": manifest["version"],
 			"addonVersionNumber": dataclasses.asdict(addonVersionNumber),
 			"minNVDAVersion": dataclasses.asdict(
-				MajorMinorPatch(*manifest["minimumNVDAVersion"])
+				MajorMinorPatch(*manifest["minimumNVDAVersion"]),
 			),
 			"lastTestedVersion": dataclasses.asdict(
-				MajorMinorPatch(*manifest["lastTestedNVDAVersion"])
+				MajorMinorPatch(*manifest["lastTestedNVDAVersion"]),
 			),
 			"channel": channel,
 			"publisher": publisher,
@@ -119,7 +118,7 @@ def _createDictMatchingJsonSchema(
 
 	# Add optional fields
 	homepage = manifest.get("url")
-	if homepage and homepage != 'None':
+	if homepage and homepage != "None":
 		# The config default is None
 		# which is parsed by configobj as a string not a NoneType
 		addonData["homepage"] = homepage
@@ -135,7 +134,7 @@ def _createDictMatchingJsonSchema(
 					"language": langCode,
 					"displayName": manifest["summary"],
 					"description": manifest["description"],
-				}
+				},
 			)
 		except KeyError as e:
 			raise KeyError(f"Translation for {langCode} missing required key '{e.args[0]}'.") from e
@@ -243,5 +242,5 @@ def main():
 			raise
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 	main()

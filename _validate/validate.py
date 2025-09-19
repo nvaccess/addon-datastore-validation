@@ -28,6 +28,7 @@ import sha256  # noqa:E402
 from addonManifest import AddonManifest  # noqa:E402
 from manifestLoader import getAddonManifest, TEMP_DIR  # noqa:E402
 from majorMinorPatch import MajorMinorPatch  # noqa:E402
+
 del sys.path[-1]
 
 
@@ -49,16 +50,14 @@ def getAddonMetadata(filename: str) -> JsonObjT:
 
 
 def getExistingVersions(verFilename: str) -> List[str]:
-	"""Loads API versions file and returns list of versions formatted as strings.
-	"""
+	"""Loads API versions file and returns list of versions formatted as strings."""
 	with open(verFilename, encoding="utf-8") as f:
 		data: List[JsonObjT] = json.load(f)
 	return [_formatVersionString(version["apiVer"].values()) for version in data]
 
 
 def getExistingStableVersions(verFilename: str) -> List[str]:
-	"""Loads API versions file and returns list of stable versions formatted as strings.
-	"""
+	"""Loads API versions file and returns list of stable versions formatted as strings."""
 	with open(verFilename, encoding="utf-8") as f:
 		data: List[JsonObjT] = json.load(f)
 	return [
@@ -69,7 +68,7 @@ def getExistingStableVersions(verFilename: str) -> List[str]:
 
 
 def _validateJson(data: JsonObjT) -> None:
-	""" Ensure that the loaded metadata conforms to the schema.
+	"""Ensure that the loaded metadata conforms to the schema.
 	Raise error if not
 	"""
 	with open(JSON_SCHEMA, encoding="utf-8") as f:
@@ -129,8 +128,7 @@ def checkSha256(addonPath: str, expectedSha: str) -> ValidationErrorGenerator:
 
 
 def checkSummaryMatchesDisplayName(manifest: AddonManifest, submission: JsonObjT) -> ValidationErrorGenerator:
-	""" The submission Name must match the *.nvda-addon manifest summary field.
-	"""
+	"""The submission Name must match the *.nvda-addon manifest summary field."""
 	summary = manifest["summary"]
 	if summary != submission["displayName"]:
 		yield (
@@ -140,7 +138,7 @@ def checkSummaryMatchesDisplayName(manifest: AddonManifest, submission: JsonObjT
 
 
 def checkDescriptionMatches(manifest: AddonManifest, submission: JsonObjT) -> ValidationErrorGenerator:
-	""" The submission description must match the *.nvda-addon manifest description field."""
+	"""The submission description must match the *.nvda-addon manifest description field."""
 	description = manifest["description"]
 	if description != submission["description"]:
 		yield (
@@ -150,32 +148,29 @@ def checkDescriptionMatches(manifest: AddonManifest, submission: JsonObjT) -> Va
 
 
 def checkUrlMatchesHomepage(manifest: AddonManifest, submission: JsonObjT) -> ValidationErrorGenerator:
-	""" The submission homepage must match the *.nvda-addon manifest url field.
-	"""
+	"""The submission homepage must match the *.nvda-addon manifest url field."""
 	manifestUrl = manifest.get("url")
-	if manifestUrl == 'None':
+	if manifestUrl == "None":
 		# The config default is None which is parsed by configobj as a string not a NoneType
 		manifestUrl = None
 	if manifestUrl != submission.get("homepage"):
-		yield f"Submission 'homepage' must be set to '{manifest.get('url')}' " \
-		f"in json file instead of {submission.get('homepage')}"
+		yield (
+			f"Submission 'homepage' must be set to '{manifest.get('url')}' "
+			f"in json file instead of {submission.get('homepage')}"
+		)
 
 
 def checkAddonId(
-		manifest: AddonManifest,
-		submissionFilePath: str,
-		submission: JsonObjT,
+	manifest: AddonManifest,
+	submissionFilePath: str,
+	submission: JsonObjT,
 ) -> ValidationErrorGenerator:
-	"""  The submitted json file must be placed in a folder matching the *.nvda-addon manifest name field.
-	"""
+	"""The submitted json file must be placed in a folder matching the *.nvda-addon manifest name field."""
 	expectedName = manifest["name"]
 	idInPath = os.path.basename(os.path.dirname(submissionFilePath))
 	if expectedName != idInPath:
-		yield (
-			"Submitted json file must be placed in a folder matching"
-			f" the addonId/name '{expectedName}'"
-		)
-	if expectedName != submission['addonId']:
+		yield (f"Submitted json file must be placed in a folder matching the addonId/name '{expectedName}'")
+	if expectedName != submission["addonId"]:
 		yield (
 			"Submission data 'addonId' field does not match 'name' field in addon manifest:"
 			f" {expectedName} vs {submission['addonId']}"
@@ -193,13 +188,12 @@ VERSION_PARSE = re.compile(r"^(\d+)(?:$|(?:\.(\d+)$)|(?:\.(\d+)\.(\d+)$))")
 
 
 def parseVersionStr(ver: str) -> Dict[str, int]:
-
 	matches = VERSION_PARSE.match(ver)
 	if not matches:
 		return {
 			"major": 0,
 			"minor": 0,
-			"patch": 0
+			"patch": 0,
 		}
 
 	groups = list(x for x in matches.groups() if x)
@@ -207,7 +201,7 @@ def parseVersionStr(ver: str) -> Dict[str, int]:
 	version = {
 		"major": int(groups[0]),
 		"minor": int(groups[1]),
-		"patch": int(groups[2])
+		"patch": int(groups[2]),
 	}
 
 	return version
@@ -216,17 +210,15 @@ def parseVersionStr(ver: str) -> Dict[str, int]:
 def _formatVersionString(versionValues: Iterable) -> str:
 	versionValues = list(versionValues)
 	assert 1 < len(versionValues) < 4
-	return ".".join(
-		str(x) for x in versionValues
-	)
+	return ".".join(str(x) for x in versionValues)
 
 
 def checkSubmissionFilenameMatchesVersionNumber(
-		submissionFilePath: str,
-		submission: JsonObjT,
+	submissionFilePath: str,
+	submission: JsonObjT,
 ) -> ValidationErrorGenerator:
 	versionFromPath: str = os.path.splitext(os.path.basename(submissionFilePath))[0]
-	versionNumber: JsonObjT = submission['addonVersionNumber']
+	versionNumber: JsonObjT = submission["addonVersionNumber"]
 	formattedVersionNumber = _formatVersionString(versionNumber.values())
 	if versionFromPath != formattedVersionNumber:
 		# yield f"Submitted json file should be named '{formattedVersionNumber}.json'"
@@ -239,10 +231,10 @@ def checkSubmissionFilenameMatchesVersionNumber(
 
 
 def checkParsedVersionNameMatchesVersionNumber(
-		submission: JsonObjT
+	submission: JsonObjT,
 ) -> ValidationErrorGenerator:
-	versionNumber: JsonObjT = submission['addonVersionNumber']
-	versionName: str = submission['addonVersionName']
+	versionNumber: JsonObjT = submission["addonVersionNumber"]
+	versionName: str = submission["addonVersionName"]
 	parsedVersion = parseVersionStr(versionName)
 	if parsedVersion != versionNumber:
 		yield (
@@ -252,8 +244,8 @@ def checkParsedVersionNameMatchesVersionNumber(
 
 
 def checkManifestVersionMatchesVersionName(
-		manifest: AddonManifest,
-		submission: JsonObjT
+	manifest: AddonManifest,
+	submission: JsonObjT,
 ) -> ValidationErrorGenerator:
 	manifestVersion: str = manifest["version"]
 	addonVersionName: str = submission["addonVersionName"]
@@ -265,8 +257,8 @@ def checkManifestVersionMatchesVersionName(
 
 
 def checkMinNVDAVersionMatches(
-		manifest: AddonManifest,
-		submission: JsonObjT
+	manifest: AddonManifest,
+	submission: JsonObjT,
 ) -> ValidationErrorGenerator:
 	manifestMinimumNVDAVersion = MajorMinorPatch(*manifest["minimumNVDAVersion"])
 	minNVDAVersion = MajorMinorPatch(**submission["minNVDAVersion"])
@@ -278,8 +270,8 @@ def checkMinNVDAVersionMatches(
 
 
 def checkLastTestedNVDAVersionMatches(
-		manifest: AddonManifest,
-		submission: JsonObjT
+	manifest: AddonManifest,
+	submission: JsonObjT,
 ) -> ValidationErrorGenerator:
 	manifestLastTestedNVDAVersion = MajorMinorPatch(*manifest["lastTestedNVDAVersion"])
 	lastTestedVersion = MajorMinorPatch(**submission["lastTestedVersion"])
@@ -291,17 +283,18 @@ def checkLastTestedNVDAVersionMatches(
 
 
 def checkLastTestedVersionExist(submission: JsonObjT, verFilename: str) -> ValidationErrorGenerator:
-	lastTestedVersion: JsonObjT = submission['lastTestedVersion']
+	lastTestedVersion: JsonObjT = submission["lastTestedVersion"]
 	formattedLastTestedVersion: str = _formatVersionString(lastTestedVersion.values())
 	if formattedLastTestedVersion not in getExistingVersions(verFilename):
 		yield f"Last tested version error: {formattedLastTestedVersion} doesn't exist"
 
-	elif (
-		submission["channel"] == "stable"
-		and formattedLastTestedVersion not in getExistingStableVersions(verFilename)
+	elif submission["channel"] == "stable" and formattedLastTestedVersion not in getExistingStableVersions(
+		verFilename,
 	):
-		yield f"Last tested version error: {formattedLastTestedVersion} is not stable yet. " + \
-		"Please submit add-on using the beta or dev channel."
+		yield (
+			f"Last tested version error: {formattedLastTestedVersion} is not stable yet. "
+			+ "Please submit add-on using the beta or dev channel."
+		)
 
 
 def checkMinRequiredVersionExist(submission: JsonObjT, verFilename: str) -> ValidationErrorGenerator:
@@ -310,24 +303,24 @@ def checkMinRequiredVersionExist(submission: JsonObjT, verFilename: str) -> Vali
 	if formattedMinRequiredVersion not in getExistingVersions(verFilename):
 		yield f"Minimum required version error: {formattedMinRequiredVersion} doesn't exist"
 
-	elif (
-		submission["channel"] == "stable"
-		and formattedMinRequiredVersion not in getExistingStableVersions(verFilename)
+	elif submission["channel"] == "stable" and formattedMinRequiredVersion not in getExistingStableVersions(
+		verFilename,
 	):
-		yield f"Minimum required version error: {formattedMinRequiredVersion} is not stable yet. " + \
-		"Please submit add-on using the beta or dev channel."
+		yield (
+			f"Minimum required version error: {formattedMinRequiredVersion} is not stable yet. "
+			+ "Please submit add-on using the beta or dev channel."
+		)
 
 
 def checkVersions(
-		manifest: AddonManifest,
-		submissionFilePath: str,
-		submission: JsonObjT
+	manifest: AddonManifest,
+	submissionFilePath: str,
+	submission: JsonObjT,
 ) -> ValidationErrorGenerator:
-	"""Check submitted json file name matches the *.nvda-addon manifest name field.
-	"""
+	"""Check submitted json file name matches the *.nvda-addon manifest name field."""
 	yield from checkSubmissionFilenameMatchesVersionNumber(
 		submissionFilePath,
-		submission
+		submission,
 	)
 	yield from checkManifestVersionMatchesVersionName(manifest, submission)
 	yield from checkParsedVersionNameMatchesVersionNumber(submission)
@@ -386,15 +379,15 @@ def main():
 		"--dry-run",
 		action="store_true",
 		default=False,
-		help="Ensures the correct arguments are passed, doesn't run checks, exists with success."
+		help="Ensures the correct arguments are passed, doesn't run checks, exists with success.",
 	)
 	parser.add_argument(
 		dest="filePathGlob",
-		help="The json (.json) files containing add-on metadata. e.g. addons/*/*.json."
+		help="The json (.json) files containing add-on metadata. e.g. addons/*/*.json.",
 	)
 	parser.add_argument(
 		dest="APIVersions",
-		help="The JSON file containing valid NVDA API versions."
+		help="The JSON file containing valid NVDA API versions.",
 	)
 	parser.add_argument(
 		"--output",
@@ -425,5 +418,5 @@ def main():
 			print(f"No validation errors for {args.filePathGlob}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 	main()

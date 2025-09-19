@@ -19,9 +19,9 @@ def sha256_checksum(binaryReadModeFile: typing.BinaryIO, blockSize: int = BLOCK_
 	:return: The Sha256 hex digest.
 	"""
 	sha256 = hashlib.sha256()
-	assert binaryReadModeFile.readable() and binaryReadModeFile.mode == 'rb'
+	assert binaryReadModeFile.readable() and binaryReadModeFile.mode == "rb"
 	f = binaryReadModeFile
-	for block in iter(lambda: f.read(blockSize), b''):
+	for block in iter(lambda: f.read(blockSize), b""):
 		sha256.update(block)
 	return sha256.hexdigest()
 
@@ -29,14 +29,14 @@ def sha256_checksum(binaryReadModeFile: typing.BinaryIO, blockSize: int = BLOCK_
 def main():
 	parser = argparse.ArgumentParser()
 	parser.add_argument(
-		type=argparse.FileType('rb'),
+		type=argparse.FileType("rb"),
 		dest="file",
-		help="The NVDA addon (*.nvda-addon) to use when computing the sha256."
+		help="The NVDA addon (*.nvda-addon) to use when computing the sha256.",
 	)
 	args = parser.parse_args()
 	checksum = sha256_checksum(args.file)
 	print(f"Sha256:\t {checksum}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 	main()

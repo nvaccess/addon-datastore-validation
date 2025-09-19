@@ -18,6 +18,7 @@ from typing import (
 sys.path.append(os.path.dirname(__file__))  # To allow this module to be run as a script by runcreatejson.bat
 # E402 module level import not at top of file
 from manifestLoader import getAddonManifest, getAddonManifestLocalizations  # noqa:E402
+
 del sys.path[-1]
 
 
@@ -41,9 +42,9 @@ def regenerateJsonFile(filePath: str, errorFilePath: Optional[str]) -> None:
 				"language": langCode,
 				"displayName": manifest["summary"],
 				"description": manifest["description"],
-			}
+			},
 		)
-	
+
 	with open(filePath, "wt", encoding="utf-8") as f:
 		json.dump(addonData, f, indent="\t", ensure_ascii=False)
 	print(f"Wrote json file: {filePath}")
@@ -69,5 +70,5 @@ def main():
 		regenerateJsonFile(addonJsonFile, errorFilePath)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 	main()
