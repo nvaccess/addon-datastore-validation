@@ -31,8 +31,5 @@ class Test_getVersionNumber(unittest.TestCase):
 			MajorMinorPatch.getFromStr("1.2.3.4")
 
 	def test_versionWithNonDigit(self):
-		with self.assertRaises(
-			ValueError,
-			msg="Non-digit chars in version number expected as an error.",
-		):
+		with self.assertRaises(ValueError, msg="Non-digit chars in version number expected as an error."):
 			MajorMinorPatch.getFromStr("1.2.3a")

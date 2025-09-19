@@ -10,12 +10,9 @@ from _validate import createJson, addonManifest, manifestLoader
 
 TOP_DIR = os.path.abspath(os.path.dirname(__file__))
 SOURCE_DIR = os.path.dirname(TOP_DIR)
-INPUT_DATA_PATH = os.path.join(SOURCE_DIR, "_tests", "testData")
+INPUT_DATA_PATH = os.path.join(SOURCE_DIR, "tests", "testData")
 VALID_JSON = os.path.join(
-	INPUT_DATA_PATH,
-	"addons",
-	"fake",
-	"13.0.0.json",
+	INPUT_DATA_PATH, "addons", "fake", "13.0.0.json"
 )  # json file available in testData/fake
 ADDON_PACKAGE = os.path.join(INPUT_DATA_PATH, "fake.nvda-addon")
 MANIFEST_FILE = os.path.join(INPUT_DATA_PATH, "manifest.ini")
@@ -23,7 +20,7 @@ ADDON_CHANNEL = "testChannel"
 ADDON_PUBLISHER = "testPublisher"
 ADDON_SOURCE_URL = "https://example.com/"
 
-OUTPUT_DATA_PATH = os.path.join(SOURCE_DIR, "_tests", "testOutput")
+OUTPUT_DATA_PATH = os.path.join(SOURCE_DIR, "tests", "testOutput")
 
 
 def getAddonManifest():
@@ -46,8 +43,8 @@ class IntegrationTestCreateJson(unittest.TestCase):
 
 	def test_contentsMatchesExampleFile(self):
 		# Values used must match the manifest files:
-		# - '_tests / testData / manifest.ini'
-		# - '_tests/testData/fake.nvda-addon' (unzip)
+		# - 'tests / testData / manifest.ini'
+		# - 'tests/testData/fake.nvda-addon' (unzip)
 		manifest = getAddonManifest()
 		createJson.generateJsonFile(
 			manifest,
@@ -61,10 +58,7 @@ class IntegrationTestCreateJson(unittest.TestCase):
 			licenseUrl="https://www.gnu.org/licenses/gpl-2.0.html",
 		)
 		actualJsonPath = os.path.join(self.outputDir, "fake", "13.0.0.json")
-		self.assertTrue(
-			os.path.isfile(actualJsonPath),
-			f"Failed to create json file: {actualJsonPath}",
-		)
+		self.assertTrue(os.path.isfile(actualJsonPath), f"Failed to create json file: {actualJsonPath}")
 		self._assertJsonFilesEqual(actualJsonPath=actualJsonPath, expectedJsonPath=VALID_JSON)
 
 	def _assertJsonFilesEqual(self, actualJsonPath: str, expectedJsonPath: str):
@@ -112,9 +106,7 @@ class Test_buildOutputFilePath(unittest.TestCase):
 		dir, filename = os.path.split(outputFilePath)
 		self.assertTrue(os.path.isdir(dir), msg="Directory must exist.")
 		self.assertEqual(
-			filename,
-			"1.2.0.json",
-			msg="Name of the output file should be named based on version number",
+			filename, "1.2.0.json", msg="Name of the output file should be named based on version number"
 		)
 
 

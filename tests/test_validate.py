@@ -17,7 +17,7 @@ VALID_ADDON_ID = "fake"
 JSON_SCHEMA = validate.JSON_SCHEMA
 TOP_DIR = os.path.abspath(os.path.dirname(__file__))
 SOURCE_DIR = os.path.dirname(TOP_DIR)
-TEST_DATA_PATH = os.path.join(SOURCE_DIR, "_tests", "testData")
+TEST_DATA_PATH = os.path.join(SOURCE_DIR, "tests", "testData")
 ADDON_PACKAGE = os.path.join(TEST_DATA_PATH, f"{VALID_ADDON_ID}.nvda-addon")
 ADDON_SUBMISSIONS_DIR = os.path.join(TEST_DATA_PATH, "addons")
 VALID_SUBMISSION_JSON_FILE = os.path.join(ADDON_SUBMISSIONS_DIR, VALID_ADDON_ID, "13.0.0.json")
@@ -67,18 +67,12 @@ class Validate_checkDownloadUrlFormat(unittest.TestCase):
 	def test_missingHTTPS(self):
 		url = "http://something.nvda-addon"
 		errors = list(validate.checkDownloadUrlFormat(url))
-		self.assertEqual(
-			errors,
-			["Add-on download url must start with https://"],
-		)
+		self.assertEqual(errors, ["Add-on download url must start with https://"])
 
 	def test_missingExt(self):
 		url = "https://example.com"
 		errors = list(validate.checkDownloadUrlFormat(url))
-		self.assertEqual(
-			errors,
-			["Add-on download url must end with .nvda-addon"],
-		)
+		self.assertEqual(errors, ["Add-on download url must end with .nvda-addon"])
 
 	def test_missingHTTPsAndExt(self):
 		url = "http://example.com"
@@ -98,16 +92,10 @@ class Validate_checkSha256(unittest.TestCase):
 	validSha = "e27fa778cb99f83ececeb0bc089033929eab5a2fa475ce63e68f50b03b6ab585"
 
 	def test_valid(self):
-		errors = validate.checkSha256(
-			ADDON_PACKAGE,
-			expectedSha=self.validSha.upper(),
-		)
+		errors = validate.checkSha256(ADDON_PACKAGE, expectedSha=self.validSha.upper())
 		self.assertEqual(list(errors), [])
 
-		errors = validate.checkSha256(
-			ADDON_PACKAGE,
-			expectedSha=self.validSha.lower(),
-		)
+		errors = validate.checkSha256(ADDON_PACKAGE, expectedSha=self.validSha.lower())
 		self.assertEqual(list(errors), [])
 
 	def test_invalid(self):
@@ -117,10 +105,7 @@ class Validate_checkSha256(unittest.TestCase):
 			expectedSha="abc",
 		)
 		errors = list(errors)
-		self.assertEqual(
-			errors,
-			[f"Sha256 of .nvda-addon at URL is: {self.validSha.lower()}"],
-		)
+		self.assertEqual(errors, [f"Sha256 of .nvda-addon at URL is: {self.validSha.lower()}"])
 
 
 class Validate_checkSummaryMatchesDisplayName(unittest.TestCase):
@@ -140,7 +125,7 @@ class Validate_checkSummaryMatchesDisplayName(unittest.TestCase):
 			errors,
 			[
 				f"Submission 'displayName' must be set to '{self.manifest['summary']}' in json file."
-				f" Instead got: '{badDisplayName}'",
+				f" Instead got: '{badDisplayName}'"
 			],
 		)
 
@@ -162,7 +147,7 @@ class Validate_checkDescriptionMatches(unittest.TestCase):
 			errors,
 			[
 				f"Submission 'description' must be set to '{self.manifest['description']}' in json file."
-				f" Instead got: '{badDesc}'",
+				f" Instead got: '{badDesc}'"
 			],
 		)
 
@@ -226,7 +211,7 @@ class Validate_checkAddonId(unittest.TestCase):
 				(  # idMismatchError
 					"Submission data 'addonId' field does not match 'name' field"
 					f" in addon manifest: {VALID_ADDON_ID} vs {invalidID}"
-				),
+				)
 			],
 			errors,
 		)
@@ -262,7 +247,7 @@ class Validate_checkAddonId(unittest.TestCase):
 				"Submission data 'addonId' field does not match the expected format:"
 				" must start and end with a letter, and contain only letters,"
 				" numbers, underscores, and hyphens. "
-				"ID: invalid addon id",
+				"ID: invalid addon id"
 			],
 			errors,
 		)
@@ -279,7 +264,7 @@ class Validate_checkAddonId(unittest.TestCase):
 				"Submission data 'addonId' field does not match the expected format:"
 				" must start and end with a letter, and contain only letters,"
 				" numbers, underscores, and hyphens. "
-				"ID: 1invalid-addon-id",
+				"ID: 1invalid-addon-id"
 			],
 			errors,
 		)
@@ -303,10 +288,7 @@ class validate_getExistingVersions(unittest.TestCase):
 
 	def test_getExistingVersions(self):
 		formattedVersions = list(validate.getExistingVersions(self.verFilename))
-		self.assertEqual(
-			formattedVersions,
-			["0.0.0", "2022.1.0", "2023.1.0", "2024.1.0"],
-		)
+		self.assertEqual(formattedVersions, ["0.0.0", "2022.1.0", "2023.1.0", "2024.1.0"])
 
 
 class validate_checkLastTestedVersionExists(unittest.TestCase):
@@ -321,8 +303,7 @@ class validate_checkLastTestedVersionExists(unittest.TestCase):
 		self.submissionData["lastTestedVersion"]["minor"] = 0
 		self.submissionData["lastTestedVersion"]["patch"] = 0
 		self.assertEqual(
-			list(validate.checkLastTestedVersionExist(self.submissionData, self.verFilename)),
-			[],
+			list(validate.checkLastTestedVersionExist(self.submissionData, self.verFilename)), []
 		)
 
 	def test_validNew(self):
@@ -330,8 +311,7 @@ class validate_checkLastTestedVersionExists(unittest.TestCase):
 		self.submissionData["lastTestedVersion"]["minor"] = 1
 		self.submissionData["lastTestedVersion"]["patch"] = 0
 		self.assertEqual(
-			list(validate.checkLastTestedVersionExist(self.submissionData, self.verFilename)),
-			[],
+			list(validate.checkLastTestedVersionExist(self.submissionData, self.verFilename)), []
 		)
 
 	def test_invalidOld(self):
@@ -358,8 +338,7 @@ class validate_checkLastTestedVersionExists(unittest.TestCase):
 		self.submissionData["lastTestedVersion"]["patch"] = 0
 		self.submissionData["channel"] = "beta"
 		self.assertEqual(
-			list(validate.checkLastTestedVersionExist(self.submissionData, self.verFilename)),
-			[],
+			list(validate.checkLastTestedVersionExist(self.submissionData, self.verFilename)), []
 		)
 
 	def test_invalidExperimental(self):
@@ -371,7 +350,7 @@ class validate_checkLastTestedVersionExists(unittest.TestCase):
 			list(validate.checkLastTestedVersionExist(self.submissionData, self.verFilename)),
 			[
 				"Last tested version error: 2024.1.0 is not stable yet. "
-				"Please submit add-on using the beta or dev channel.",
+				"Please submit add-on using the beta or dev channel."
 			],
 		)
 
@@ -388,8 +367,7 @@ class validate_checkMinRequiredVersionExists(unittest.TestCase):
 		self.submissionData["minNVDAVersion"]["minor"] = 0
 		self.submissionData["minNVDAVersion"]["patch"] = 0
 		self.assertEqual(
-			list(validate.checkMinRequiredVersionExist(self.submissionData, self.verFilename)),
-			[],
+			list(validate.checkMinRequiredVersionExist(self.submissionData, self.verFilename)), []
 		)
 
 	def test_validNew(self):
@@ -397,8 +375,7 @@ class validate_checkMinRequiredVersionExists(unittest.TestCase):
 		self.submissionData["minNVDAVersion"]["minor"] = 1
 		self.submissionData["minNVDAVersion"]["patch"] = 0
 		self.assertEqual(
-			list(validate.checkMinRequiredVersionExist(self.submissionData, self.verFilename)),
-			[],
+			list(validate.checkMinRequiredVersionExist(self.submissionData, self.verFilename)), []
 		)
 
 	def test_invalidOld(self):
@@ -425,8 +402,7 @@ class validate_checkMinRequiredVersionExists(unittest.TestCase):
 		self.submissionData["minNVDAVersion"]["patch"] = 0
 		self.submissionData["channel"] = "beta"
 		self.assertEqual(
-			list(validate.checkMinRequiredVersionExist(self.submissionData, self.verFilename)),
-			[],
+			list(validate.checkMinRequiredVersionExist(self.submissionData, self.verFilename)), []
 		)
 
 	def test_invalidExperimental(self):
@@ -438,7 +414,7 @@ class validate_checkMinRequiredVersionExists(unittest.TestCase):
 			list(validate.checkMinRequiredVersionExist(self.submissionData, self.verFilename)),
 			[
 				"Minimum required version error: 2024.1.0 is not stable yet. "
-				"Please submit add-on using the beta or dev channel.",
+				"Please submit add-on using the beta or dev channel."
 			],
 		)
 
@@ -461,7 +437,7 @@ class Validate_checkMinNVDAVersionMatches(unittest.TestCase):
 			errors,
 			[
 				"Submission data 'minNVDAVersion' field does not match 'minNVDAVersion' field "
-				"in addon manifest: 1999.1.0 vs minNVDAVersion: 2022.1.0",
+				"in addon manifest: 1999.1.0 vs minNVDAVersion: 2022.1.0"
 			],
 		)
 
@@ -485,7 +461,7 @@ class Validate_checkLastTestedNVDAVersionMatches(unittest.TestCase):
 			[
 				"Submission data 'lastTestedVersion' field does not match "
 				"'lastTestedNVDAVersion' field in addon manifest: 9999.1.0 vs "
-				"lastTestedVersion: 2023.1.0",
+				"lastTestedVersion: 2023.1.0"
 			],
 		)
 
@@ -513,11 +489,7 @@ class Validate_checkVersions(unittest.TestCase):
 		self.fileName = ""
 
 	def _setupVersions(
-		self,
-		submissionFileNameVer: str,
-		versionNum: VersionNumber,
-		versionName: str,
-		manifestVersion: str,
+		self, submissionFileNameVer: str, versionNum: VersionNumber, versionName: str, manifestVersion: str
 	):
 		"""Mutate instance variables for testing convenience"""
 		self.fileName = os.path.join(ADDON_SUBMISSIONS_DIR, VALID_ADDON_ID, f"{submissionFileNameVer}.json")
@@ -560,7 +532,7 @@ class Validate_checkVersions(unittest.TestCase):
 				"Submission filename and versionNumber mismatch error:"
 				" addonVersionNumber: 13.6.0"
 				" version from submission filename: 13.06"
-				" expected submission filename: 13.6.0.json",
+				" expected submission filename: 13.6.0.json"
 			],
 			errors,
 		)
@@ -582,7 +554,7 @@ class Validate_checkVersions(unittest.TestCase):
 				"Submission filename and versionNumber mismatch error:"
 				" addonVersionNumber: 13.6.0"
 				" version from submission filename: 13.6"
-				" expected submission filename: 13.6.0.json",
+				" expected submission filename: 13.6.0.json"
 			],
 			errors,
 		)
@@ -628,7 +600,7 @@ class Validate_checkVersions(unittest.TestCase):
 				(
 					"Warning: submission data 'addonVersionName' and 'addonVersionNumber' "
 					"mismatch.  Unable to parse: 13.06-NG and match with 13.6.0"
-				),
+				)
 			],
 			errors,
 		)
@@ -650,7 +622,7 @@ class Validate_checkVersions(unittest.TestCase):
 				(
 					"Warning: submission data 'addonVersionName' and 'addonVersionNumber' "
 					"mismatch.  Unable to parse: June Release '21 and match with 13.6.0"
-				),
+				)
 			],
 			errors,
 		)
@@ -671,7 +643,7 @@ class Validate_checkVersions(unittest.TestCase):
 				(
 					"Submission data 'addonVersionName' field does not match 'version' field"
 					" in addon manifest: 13.2 vs addonVersionName: 12.2"
-				),
+				)
 			],
 			errors,
 		)
@@ -682,9 +654,7 @@ class Validate_End2End(unittest.TestCase):
 		def __init__(self, readFunc: Callable[[], bytes]) -> None:
 			self.read = readFunc
 			self.code = 200
-			self.headers = {
-				"content-length": os.path.getsize(ADDON_PACKAGE),
-			}
+			self.headers = {"content-length": os.path.getsize(ADDON_PACKAGE)}
 
 	def setUp(self) -> None:
 		self.addonReader = open(ADDON_PACKAGE, "rb")
@@ -758,10 +728,7 @@ class VersionRegex(unittest.TestCase):
 		self.assertTrue(matches)
 		assert matches
 		groups = list(x for x in matches.groups() if x)
-		self.assertEqual(
-			["23", "5", "1"],
-			groups,
-		)
+		self.assertEqual(["23", "5", "1"], groups)
 
 	def test_versionMajorMinor_valid(self):
 		ver = "6.0"
@@ -769,10 +736,7 @@ class VersionRegex(unittest.TestCase):
 		self.assertTrue(matches)
 		assert matches
 		groups = list(x for x in matches.groups() if x)
-		self.assertEqual(
-			["6", "0"],
-			groups,
-		)
+		self.assertEqual(["6", "0"], groups)
 
 	def test_versionMajor_valid(self):
 		ver = "1"
@@ -780,10 +744,7 @@ class VersionRegex(unittest.TestCase):
 		self.assertTrue(matches)
 		assert matches
 		groups = list(x for x in matches.groups() if x)
-		self.assertEqual(
-			["1"],
-			groups,
-		)
+		self.assertEqual(["1"], groups)
 
 	def test_NonDotSep_invalid(self):
 		ver = f"{3},{2},{1}"
