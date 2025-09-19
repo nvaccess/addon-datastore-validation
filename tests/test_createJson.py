@@ -12,7 +12,10 @@ TOP_DIR = os.path.abspath(os.path.dirname(__file__))
 SOURCE_DIR = os.path.dirname(TOP_DIR)
 INPUT_DATA_PATH = os.path.join(SOURCE_DIR, "tests", "testData")
 VALID_JSON = os.path.join(
-	INPUT_DATA_PATH, "addons", "fake", "13.0.0.json"
+	INPUT_DATA_PATH,
+	"addons",
+	"fake",
+	"13.0.0.json",
 )  # json file available in testData/fake
 ADDON_PACKAGE = os.path.join(INPUT_DATA_PATH, "fake.nvda-addon")
 MANIFEST_FILE = os.path.join(INPUT_DATA_PATH, "manifest.ini")
@@ -106,7 +109,9 @@ class Test_buildOutputFilePath(unittest.TestCase):
 		dir, filename = os.path.split(outputFilePath)
 		self.assertTrue(os.path.isdir(dir), msg="Directory must exist.")
 		self.assertEqual(
-			filename, "1.2.0.json", msg="Name of the output file should be named based on version number"
+			filename,
+			"1.2.0.json",
+			msg="Name of the output file should be named based on version number",
 		)
 
 
