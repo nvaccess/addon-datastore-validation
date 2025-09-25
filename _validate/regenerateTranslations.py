@@ -45,7 +45,7 @@ def regenerateJsonFile(filePath: str, errorFilePath: Optional[str]) -> None:
 				"language": langCode,
 				"displayName": manifest["summary"],
 				"description": manifest["description"],
-				"changelog": manifest["changelog"],
+				"changelog": changelog,
 			}
 		)
 

@@ -375,8 +375,7 @@
 			"required": [
 				"language",
 				"displayName",
-				"description",
-				"changelog"
+				"description"
 			],
 			"properties": {
 				"language": {
