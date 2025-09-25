@@ -28,13 +28,11 @@
 			"sourceURL": "https://github.com/nvaccess/addon-datastore/",
 			"license": "GPL v2",
 			"licenseURL": "https://github.com/nvaccess/addon-datastore/license.MD",
-			"changelog": "New features",
 			"translations": [
 				{
 					"language": "de",
 					"displayName": "Mein Addon",
-					"description": "erleichtert das Durchführen von xyz",
-					"changelog": "Neue Funktionen"
+					"description": "erleichtert das Durchführen von xyz"
 				}
 			],
 			"reviewUrl": "https://github.com/nvaccess/addon-datastore/discussions/1942#discussioncomment-7453248",

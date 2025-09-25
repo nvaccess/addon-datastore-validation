@@ -34,7 +34,11 @@ def regenerateJsonFile(filePath: str, errorFilePath: Optional[str]) -> None:
 			with open(errorFilePath, "w") as errorFile:
 				errorFile.write(f"Validation Errors:\n{manifest.errors}")
 		return
-
+	changelog = manifest["changelog"]
+	if changelog == 'None':
+		# The config default is None
+		# which is parsed by configobj as a string not a NoneType
+		changelog = ''
 	for langCode, manifest in getAddonManifestLocalizations(manifest):
 		addonData["translations"].append(
 			{

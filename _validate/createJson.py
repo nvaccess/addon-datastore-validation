@@ -100,7 +100,6 @@ def _createDictMatchingJsonSchema(
 			"displayName": manifest["summary"],
 			"URL": url,
 			"description": manifest["description"],
-			"changelog": manifest["changelog"],
 			"sha256": sha,
 			"addonVersionName": manifest["version"],
 			"addonVersionNumber": dataclasses.asdict(addonVersionNumber),
@@ -124,6 +123,11 @@ def _createDictMatchingJsonSchema(
 		# The config default is None
 		# which is parsed by configobj as a string not a NoneType
 		addonData["homepage"] = homepage
+	changelog = manifest.get("changelog")
+	if changelog and changelog != 'None':
+		# The config default is None
+		# which is parsed by configobj as a string not a NoneType
+		addonData["changelog"] = changelog
 	if licenseUrl:
 		addonData["licenseURL"] = licenseUrl
 	addonData["submissionTime"] = getCurrentTime()
