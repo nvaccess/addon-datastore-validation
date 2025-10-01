@@ -64,7 +64,9 @@ class AddonManifest(ConfigObj):
 	)
 
 	def __init__(self, input: str | TextIOBase, translatedInput: str | None = None):
-		"""Constructs an L{AddonManifest} instance from manifest string data
+		"""
+		Constructs an :class:`AddonManifest` instance from manifest string data.
+		
 		:param input: data to read the manifest information. Can be a filename or a file-like object.
 		:param translatedInput: translated manifest input
 		"""
