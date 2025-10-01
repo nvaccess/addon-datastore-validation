@@ -24,7 +24,7 @@ def regenerateJsonFile(filePath: str, errorFilePath: str | None) -> None:
 				errorFile.write(f"Validation Errors:\n{manifest.errors}")
 		return
 	changelog = manifest.get("changelog")
-	if changelog == 'None':
+	if changelog == "None":
 		# The config default is None
 		# which is parsed by configobj as a string not a NoneType
 		changelog = None
@@ -35,7 +35,7 @@ def regenerateJsonFile(filePath: str, errorFilePath: str | None) -> None:
 				"displayName": manifest["summary"],
 				"description": manifest["description"],
 				"changelog": changelog,
-			}
+			},
 		)
 
 	with open(filePath, "wt", encoding="utf-8") as f:

@@ -133,15 +133,18 @@ def checkDescriptionMatches(manifest: AddonManifest, submission: JsonObjT) -> Va
 			f" Instead got: '{submission['description']}'"
 		)
 
+
 def checkChangelogMatches(manifest: AddonManifest, submission: JsonObjT) -> ValidationErrorGenerator:
-	""" The submission changelog must match the *.nvda-addon manifest changelog field."""
+	"""The submission changelog must match the *.nvda-addon manifest changelog field."""
 	changelog = manifest.get("changelog")
-	if changelog == 'None':
+	if changelog == "None":
 		# The config default is None which is parsed by configobj as a string not a NoneType
 		changelog = None
 	if changelog != submission.get("changelog"):
-		yield f"Submission 'changelog' must be set to '{manifest.get('changelog')}' " \
-		f"in json file instead of {submission.get('changelog')}"
+		yield (
+			f"Submission 'changelog' must be set to '{manifest.get('changelog')}' "
+			f"in json file instead of {submission.get('changelog')}"
+		)
 
 
 def checkUrlMatchesHomepage(manifest: AddonManifest, submission: JsonObjT) -> ValidationErrorGenerator:

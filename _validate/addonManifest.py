@@ -91,8 +91,8 @@ class AddonManifest(ConfigObj):
 			)
 		self._translatedConfig = None
 		if translatedInput is not None:
-			self._translatedConfig = ConfigObj(translatedInput, encoding='utf-8', default_encoding='utf-8')
-			for key in ('summary', 'description', 'changelog'):
+			self._translatedConfig = ConfigObj(translatedInput, encoding="utf-8", default_encoding="utf-8")
+			for key in ("summary", "description", "changelog"):
 				val = self._translatedConfig.get(key)
 				if val:
 					self[key] = val

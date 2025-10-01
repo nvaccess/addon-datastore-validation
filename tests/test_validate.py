@@ -87,8 +87,8 @@ class Validate_checkDownloadUrlFormat(unittest.TestCase):
 
 
 class Validate_checkSha256(unittest.TestCase):
-	"""Tests for the checkSha256 function
-	"""
+	"""Tests for the checkSha256 function"""
+
 	validSha = "50a8011a807665bcb8fdd177c276fef3b3f7f754796c5990ebe14e80c28b14ef"
 
 	def test_valid(self):
@@ -163,7 +163,7 @@ class Validate_checkChangelogMatches(unittest.TestCase):
 
 	def test_valid(self):
 		errors = list(
-			validate.checkChangelogMatches(self.manifest, self.submissionData)
+			validate.checkChangelogMatches(self.manifest, self.submissionData),
 		)
 		self.assertEqual(errors, [])
 
@@ -171,14 +171,14 @@ class Validate_checkChangelogMatches(unittest.TestCase):
 		badChangelog = "bad changelog"
 		self.submissionData["changelog"] = badChangelog
 		errors = list(
-			validate.checkChangelogMatches(self.manifest, self.submissionData)
+			validate.checkChangelogMatches(self.manifest, self.submissionData),
 		)
 		self.assertEqual(
 			errors,
 			[
 				f"Submission 'changelog' must be set to '{self.manifest['changelog']}' in json file."
-				f" Instead got: '{badChangelog}'"
-			]
+				f" Instead got: '{badChangelog}'",
+			],
 		)
 
 

@@ -108,12 +108,12 @@ def _createDataclassMatchingJsonSchema(
 
 	# Add optional fields
 	homepage = manifest.get("url")
-	if homepage and homepage != 'None':
+	if homepage and homepage != "None":
 		# The config default is None
 		# which is parsed by configobj as a string not a NoneType
 		addonData["homepage"] = homepage
 	changelog = manifest.get("changelog")
-	if changelog and changelog != 'None':
+	if changelog and changelog != "None":
 		# The config default is None
 		# which is parsed by configobj as a string not a NoneType
 		addonData["changelog"] = changelog
@@ -130,7 +130,7 @@ def _createDataclassMatchingJsonSchema(
 					"displayName": manifest["summary"],
 					"description": manifest["description"],
 					"changelog": manifest["changelog"],
-				}
+				},
 			)
 		except KeyError as e:
 			raise KeyError(f"Translation for {langCode} missing required key '{e.args[0]}'.") from e
