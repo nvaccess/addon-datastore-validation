@@ -157,10 +157,6 @@ class Validate_checkChangelogMatches(unittest.TestCase):
 		self.submissionData = getValidAddonSubmission()
 		self.manifest = getAddonManifest()
 
-	def tearDown(self):
-		self.submissionData = None
-		self.manifest = None
-
 	def test_valid(self):
 		errors = list(
 			validate.checkChangelogMatches(self.manifest, self.submissionData),
