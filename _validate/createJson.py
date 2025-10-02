@@ -32,6 +32,7 @@ class AddonData:
 	sourceURL: str
 	license: str
 	homepage: str | None
+	changelog: str | None
 	licenseURL: str | None
 	submissionTime: int
 	translations: list[dict[str, str]]
