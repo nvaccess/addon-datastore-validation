@@ -127,7 +127,6 @@ def _createDataclassMatchingJsonSchema(
 			translations.append(
 				{
 					"language": langCode,
-					"changelog": manifest["changelog"],
 					"displayName": cast(str, translatedManifest["summary"]),
 					"description": cast(str, translatedManifest["description"]),
 					"changelog": cast(str, translatedManifest["changelog"]),
@@ -153,6 +152,7 @@ def _createDataclassMatchingJsonSchema(
 		sourceURL=sourceUrl,
 		license=licenseName,
 		homepage=homepage,
+		changelog=changelog,
 		licenseURL=licenseUrl,
 		submissionTime=getCurrentTime(),
 		translations=translations,
