@@ -106,22 +106,9 @@ def _createDataclassMatchingJsonSchema(
 	for key in ("name", "summary", "description", "minimumNVDAVersion", "lastTestedNVDAVersion", "version"):
 		if key not in manifest:
 			raise KeyError(f"Manifest missing required key '{key}'.")
-
 	# Add optional fields
 	homepage = manifest.get("url")
-	if homepage and homepage != "None":
-		# The config default is None
-		# which is parsed by configobj as a string not a NoneType
-		addonData["homepage"] = homepage
 	changelog = manifest.get("changelog")
-	if changelog and changelog != "None":
-		# The config default is None
-		# which is parsed by configobj as a string not a NoneType
-		addonData["changelog"] = changelog
-	if licenseUrl:
-		addonData["licenseURL"] = licenseUrl
-	addonData["submissionTime"] = getCurrentTime()
-
 	translations: list[dict[str, str]] = []
 	for langCode, translatedManifest in getAddonManifestLocalizations(manifest):
 		try:
