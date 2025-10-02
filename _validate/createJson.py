@@ -109,7 +109,7 @@ def _createDataclassMatchingJsonSchema(
 	# Add optional fields
 	homepage = manifest.get("url")
 	changelog = manifest.get("changelog")
-	translations: list[dict[str, str]] = []
+	translations: list[dict[str, str | None]] = []
 	for langCode, translatedManifest in getAddonManifestLocalizations(manifest):
 		try:
 			translations.append(
@@ -117,7 +117,7 @@ def _createDataclassMatchingJsonSchema(
 					"language": langCode,
 					"displayName": cast(str, translatedManifest["summary"]),
 					"description": cast(str, translatedManifest["description"]),
-					"changelog": cast(str, translatedManifest["changelog"]),
+					"changelog": translatedManifest["changelog"],
 				},
 			)
 		except KeyError as e:

@@ -64,6 +64,8 @@ strictSetInference = true
 
 # ignore configobj
 reportMissingTypeStubs = false
+reportUnknownVariableType = false
+reportUnknownMemberType = false
 
 [tool.uv]
 default-groups = "all"
