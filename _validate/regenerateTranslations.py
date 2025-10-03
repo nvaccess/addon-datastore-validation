@@ -34,9 +34,16 @@ def regenerateJsonFile(filePath: str, errorFilePath: str | None) -> None:
 				"language": langCode,
 				"displayName": manifest["summary"],
 				"description": manifest["description"],
-				"changelog": changelog,
 			},
 		)
+
+		translatedChangelog = manifest.get("changelog")
+		if translatedChangelog:
+			addonData["translations"].append(
+				{
+					"changelog": translatedChangelog,
+				},
+			)
 
 	with open(filePath, "wt", encoding="utf-8") as f:
 		json.dump(addonData, f, indent="\t", ensure_ascii=False)

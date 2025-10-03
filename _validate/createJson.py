@@ -109,7 +109,7 @@ def _createDataclassMatchingJsonSchema(
 	# Add optional fields
 	homepage = manifest.get("url")
 	changelog = manifest.get("changelog")
-	translations: list[dict[str, str | None]] = []
+	translations: list[dict[str, str]] = []
 	for langCode, translatedManifest in getAddonManifestLocalizations(manifest):
 		try:
 			translations.append(
@@ -117,11 +117,19 @@ def _createDataclassMatchingJsonSchema(
 					"language": langCode,
 					"displayName": cast(str, translatedManifest["summary"]),
 					"description": cast(str, translatedManifest["description"]),
-					"changelog": translatedManifest["changelog"],
 				},
 			)
 		except KeyError as e:
 			raise KeyError(f"Translation for {langCode} missing required key '{e.args[0]}'.") from e
+
+		# Add optional translated changelog.
+		translatedChangelog = translatedManifest.get("changelog")
+		if translatedChangelog:
+			translations.append(
+				{
+					"changelog": cast(str, translatedChangelog),
+				},
+			)
 
 	addonData = AddonData(
 		addonId=cast(str, manifest["name"]),
@@ -139,8 +147,8 @@ def _createDataclassMatchingJsonSchema(
 		publisher=publisher,
 		sourceURL=sourceUrl,
 		license=licenseName,
-		homepage=homepage,
-		changelog=changelog,
+		homepage=cast(str, homepage),
+		changelog=cast(str, changelog),
 		licenseURL=licenseUrl,
 		submissionTime=getCurrentTime(),
 		translations=translations,
