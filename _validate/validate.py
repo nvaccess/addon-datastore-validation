@@ -135,7 +135,7 @@ def checkDescriptionMatches(manifest: AddonManifest, submission: JsonObjT) -> Va
 
 
 def checkChangelogMatches(manifest: AddonManifest, submission: JsonObjT) -> ValidationErrorGenerator:
-	"""The submission changelog must match the *.nvda-addon manifest changelog field."""
+	"""The submission changelog must match the *.nvda-addon manifest changelog field."""  # type: ignore[reportUnknownMemberType]
 	changelog = manifest.get("changelog")
 	if changelog == "None":
 		# The config default is None which is parsed by configobj as a string not a NoneType
