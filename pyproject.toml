@@ -64,12 +64,9 @@ strictSetInference = true
 
 # ignore configobj
 reportMissingTypeStubs = false
-reportUnknownVariableType = false
-reportUnknownMemberType = false
 
 [tool.uv]
 default-groups = "all"
-#python-preference = "only-system"
 environments = ["sys_platform == 'win32'"]
 required-version = ">=0.8"
 
