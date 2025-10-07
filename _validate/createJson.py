@@ -108,7 +108,15 @@ def _createDataclassMatchingJsonSchema(
 			raise KeyError(f"Manifest missing required key '{key}'.")
 	# Add optional fields
 	homepage = manifest.get("url")  # type: ignore[reportUnknownMemberType]
+	if homepage == "None":
+		# The config default is None
+		# which is parsed by configobj as a string not a NoneType
+		homepage = None
 	changelog = manifest.get("changelog")  # type: ignore[reportUnknownMemberType]
+	if changelog == "None":
+		# The config default is None
+		# which is parsed by configobj as a string not a NoneType
+		changelog = None
 	translations: list[dict[str, str]] = []
 	for langCode, translatedManifest in getAddonManifestLocalizations(manifest):
 		try:
@@ -147,8 +155,8 @@ def _createDataclassMatchingJsonSchema(
 		publisher=publisher,
 		sourceURL=sourceUrl,
 		license=licenseName,
-		homepage=homepage,  # type: ignore[reportUnknownMemberType]
-		changelog=changelog,  # type: ignore[reportUnknownMemberType]
+		homepage=homepage,
+		changelog=changelog,
 		licenseURL=licenseUrl,
 		submissionTime=getCurrentTime(),
 		translations=translations,
