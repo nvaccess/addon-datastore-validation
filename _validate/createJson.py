@@ -132,10 +132,14 @@ def _createDataclassMatchingJsonSchema(
 
 		# Add optional translated changelog.
 		translatedChangelog = translatedManifest.get("changelog")  # type: ignore[reportUnknownMemberType]
+		if translatedChangelog == "None":
+			# The config default is None
+			# which is parsed by configobj as a string not a NoneType
+			translatedChangelog = None
 		if translatedChangelog:
 			translations.append(
 				{
-					"changelog": cast(str, translatedChangelog),
+					"changelog": translatedChangelog,
 				},
 			)
 
