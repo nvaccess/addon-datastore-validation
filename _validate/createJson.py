@@ -147,8 +147,8 @@ def _createDataclassMatchingJsonSchema(
 		publisher=publisher,
 		sourceURL=sourceUrl,
 		license=licenseName,
-		homepage=homepage,
-		changelog=changelog,
+		homepage=homepage,  # type: ignore[reportUnknownMemberType]
+		changelog=changelog,  # type: ignore[reportUnknownMemberType]
 		licenseURL=licenseUrl,
 		submissionTime=getCurrentTime(),
 		translations=translations,
