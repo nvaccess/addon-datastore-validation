@@ -434,6 +434,7 @@ def main():
 
 	if not args.dry_run:
 		anyErrors = False
+		print(f"Validating {addonFiles} files matching {args.filePathGlob}")
 		for filename in addonFiles:
 			print(f"Validating {filename}")
 			try:
