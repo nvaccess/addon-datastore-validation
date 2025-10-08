@@ -384,7 +384,7 @@ def outputErrors(addonFileName: str, errors: list[str], errorFilePath: str | Non
 				print(f"DEBUG: Writing errors to file: {errorFilePath}")
 				with open(errorFilePath, "a", encoding="utf-8") as errorFile:
 					errorFile.write(
-						f"Validation Errors for {addonFileName}:\n- " + "\n- ".join(errors) + "\n\n"
+						f"Validation Errors for {addonFileName}:\n- " + "\n- ".join(errors) + "\n\n",
 					)
 				print("DEBUG: Successfully wrote errors to file")
 				# Verify the file was written
