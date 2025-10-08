@@ -34,11 +34,11 @@ jobs:
       shell: cmd
       # E2E: test to check the script can be run, no need to actually test the file.
       # The internal checks are covered with unit tests.
-      run: .\runvalidate.bat --dry-run _test/testData/addons/fake/13.0.json tests\testData\nvdaAPIVersions.json
+      run: .\runvalidate.bat --dry-run tests/testData/addons/fake/13.0.json tests/testData/nvdaAPIVersions.json
     - name: Get sha256
       shell: cmd
       # E2E: test to check the script can be run
-      run: .\runsha.bat tests\testData\fake.nvda-addon
+      run: .\runsha.bat tests/testData/fake.nvda-addon
     - name: Generate json file
       shell: cmd
       # E2E: test to check the script can be run
