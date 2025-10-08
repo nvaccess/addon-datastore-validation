@@ -304,32 +304,54 @@ def checkVersions(
 
 
 def validateSubmission(submissionFilePath: str, verFilename: str) -> ValidationErrorGenerator:
+	print(f"DEBUG: Starting validation for {submissionFilePath}")
 	try:
+		print(f"DEBUG: Loading addon metadata from {submissionFilePath}")
 		submissionData = getAddonMetadata(filename=submissionFilePath)
+		print("DEBUG: Loaded metadata successfully")
 
 		if submissionData.get("legacy"):
+			print("DEBUG: Legacy addon detected, skipping validation")
 			# Legacy add-ons do not need a valid manifest or metadata
 			return None
 
+		print("DEBUG: Checking download URL format")
 		urlErrors = list(checkDownloadUrlFormat(submissionData["URL"]))
 		if urlErrors:
+			print(f"DEBUG: URL format errors found: {urlErrors}")
 			# if there are errors in the URL validation can not continue
 			yield from urlErrors
 			raise ValueError(submissionData["URL"])
 
+		print(f"DEBUG: Preparing to download addon from {submissionData['URL']}")
 		addonDestPath = os.path.join(TEMP_DIR, "addon.nvda-addon")
 		if os.path.exists(addonDestPath):
+			print("DEBUG: Removing existing addon file")
 			os.remove(addonDestPath)
-		yield from downloadAddon(url=submissionData["URL"], destPath=addonDestPath)
 
+		print("DEBUG: Downloading addon...")
+		downloadErrors = list(downloadAddon(url=submissionData["URL"], destPath=addonDestPath))
+		if downloadErrors:
+			print(f"DEBUG: Download errors: {downloadErrors}")
+			yield from downloadErrors
+		else:
+			print("DEBUG: Download completed successfully")
+
+		print("DEBUG: Checking SHA256 checksum")
 		checksumErrors = list(checkSha256(addonDestPath, expectedSha=submissionData["sha256"]))
 		if checksumErrors:
+			print(f"DEBUG: Checksum errors: {checksumErrors}")
 			yield from checksumErrors
 
+		print("DEBUG: Checking version compatibility")
 		yield from checkLastTestedVersionExist(submissionData, verFilename)
 		yield from checkMinRequiredVersionExist(submissionData, verFilename)
 
+		print("DEBUG: Loading addon manifest")
 		manifest = getAddonManifest(addonDestPath)
+		print("DEBUG: Manifest loaded successfully")
+
+		print("DEBUG: Running metadata validation checks")
 		yield from checkSummaryMatchesDisplayName(manifest, submissionData)
 		yield from checkDescriptionMatches(manifest, submissionData)
 		yield from checkUrlMatchesHomepage(manifest, submissionData)
@@ -338,16 +360,46 @@ def validateSubmission(submissionFilePath: str, verFilename: str) -> ValidationE
 		yield from checkLastTestedNVDAVersionMatches(manifest, submissionData)
 		yield from checkVersions(manifest, submissionFilePath, submissionData)
 
+		print(f"DEBUG: Validation completed successfully for {submissionFilePath}")
+
 	except Exception as e:
+		print(f"DEBUG: Exception caught in validateSubmission: {e}")
+		print(f"DEBUG: Exception type: {type(e)}")
+		import traceback
+
+		print(f"DEBUG: Traceback: {traceback.format_exc()}")
 		yield f"Fatal error, unable to continue: {e}"
 
 
 def outputErrors(addonFileName: str, errors: list[str], errorFilePath: str | None = None):
+	print(f"DEBUG: outputErrors called with {len(errors)} errors for {addonFileName}")
+	print(f"DEBUG: Error file path: {errorFilePath}")
 	if len(errors) > 0:
+		print("DEBUG: Errors to output:")
+		for i, error in enumerate(errors):
+			print(f"DEBUG:   {i + 1}: {error}")
 		print("\r\n".join(errors))
 		if errorFilePath:
-			with open(errorFilePath, "a", encoding="utf-8") as errorFile:
-				errorFile.write(f"Validation Errors for {addonFileName}:\n- " + "\n- ".join(errors) + "\n\n")
+			try:
+				print(f"DEBUG: Writing errors to file: {errorFilePath}")
+				with open(errorFilePath, "a", encoding="utf-8") as errorFile:
+					errorFile.write(
+						f"Validation Errors for {addonFileName}:\n- " + "\n- ".join(errors) + "\n\n"
+					)
+				print("DEBUG: Successfully wrote errors to file")
+				# Verify the file was written
+				if os.path.exists(errorFilePath):
+					print(f"DEBUG: Error file exists, size: {os.path.getsize(errorFilePath)} bytes")
+				else:
+					print("DEBUG: ERROR: Error file does not exist after writing!")
+			except Exception as e:
+				print(f"DEBUG: Exception writing to error file: {e}")
+				print(f"DEBUG: Exception type: {type(e)}")
+				import traceback
+
+				print(f"DEBUG: Traceback: {traceback.format_exc()}")
+	else:
+		print("DEBUG: No errors to output")
 
 
 def main():
@@ -384,12 +436,32 @@ def main():
 		anyErrors = False
 		for filename in addonFiles:
 			print(f"Validating {filename}")
-			errors = list(validateSubmission(filename, verFilename))
-			if errors:
+			try:
+				errors = list(validateSubmission(filename, verFilename))
+				print(f"Validation completed for {filename}. Found {len(errors)} errors.")
+				if errors:
+					print(f"Errors found: {errors}")
+					anyErrors = True
+					outputErrors(filename, errors, errorOutputFile)
+				else:
+					print(f"No errors found for {filename}")
+			except Exception as e:
+				print(f"Exception during validation of {filename}: {e}")
+				print(f"Exception type: {type(e)}")
+				import traceback
+
+				print(f"Traceback: {traceback.format_exc()}")
 				anyErrors = True
-				outputErrors(filename, errors, errorOutputFile)
+				errorList = [f"Fatal error during validation: {e}"]
+				outputErrors(filename, errorList, errorOutputFile)
+
+		print(f"Validation summary: anyErrors = {anyErrors}")
 		if anyErrors:
 			print(f"Validation errors for {args.filePathGlob} in {errorOutputFile}")
+			if errorOutputFile and os.path.exists(errorOutputFile):
+				print(f"Error file exists, size: {os.path.getsize(errorOutputFile)} bytes")
+				with open(errorOutputFile, "r", encoding="utf-8") as f:
+					print(f"Error file contents: {f.read()}")
 			raise ValueError(f"Validation errors for {args.filePathGlob} in {errorOutputFile}")
 		else:
 			print(f"No validation errors for {args.filePathGlob}")
