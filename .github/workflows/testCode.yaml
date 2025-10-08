@@ -42,4 +42,4 @@ jobs:
     - name: Generate json file
       shell: cmd
       # E2E: test to check the script can be run
-      run: .\runcreatejson.bat -f fake.nvda-addon --dir .\tests\testData --channel=stable --publisher=fakepublisher --sourceUrl=https://github.com/fake/ --url=https://github.com/fake.nvda-addon --licName="GPL v2" --licUrl="https://www.gnu.org/licenses/gpl-2.0.html"
+      run: .\runcreatejson.bat -f tests/testData/fake.nvda-addon --dir tests/testOutput/test_runcreatejson --channel=stable --publisher=fakepublisher --sourceUrl=https://github.com/fake/ --url=https://github.com/fake.nvda-addon --licName="GPL v2" --licUrl="https://www.gnu.org/licenses/gpl-2.0.html"
