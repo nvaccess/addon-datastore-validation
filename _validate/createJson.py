@@ -118,7 +118,7 @@ def _createDataclassMatchingJsonSchema(
 		# The config default is None
 		# which is parsed by configobj as a string not a NoneType
 		changelog = None
-	translations: list[dict[str, str]] = []
+	translations: list[dict[str, str | None]] = []
 	for langCode, translatedManifest in getAddonManifestLocalizations(manifest):
 		try:
 			translations.append(
@@ -132,7 +132,7 @@ def _createDataclassMatchingJsonSchema(
 			raise KeyError(f"Translation for {langCode} missing required key '{e.args[0]}'.") from e
 
 		# Add optional translated changelog.
-		translatedChangelog = translatedManifest.get("changelog")  # type: ignore[reportUnknownMemberType]
+		translatedChangelog: str | None = translatedManifest.get("changelog")  # type: ignore[reportUnknownMemberType]
 		if translatedChangelog == "None":
 			# The config default is None
 			# which is parsed by configobj as a string not a NoneType
