@@ -35,7 +35,7 @@ class AddonData:
 	changelog: str | None
 	licenseURL: str | None
 	submissionTime: int
-	translations: list[dict[str, str]]
+	translations: list[dict[str, str | None]]
 
 
 def getSha256(addonPath: str) -> str:
@@ -108,12 +108,12 @@ def _createDataclassMatchingJsonSchema(
 			raise KeyError(f"Manifest missing required key '{key}'.")
 
 	# Add optional fields
-	homepage = manifest.get("url")  # type: ignore[reportUnknownMemberType]
+	homepage | None = manifest.get("url")  # type: ignore[reportUnknownMemberType]
 	if homepage == "None":
 		# The config default is None
 		# which is parsed by configobj as a string not a NoneType
 		homepage = None
-	changelog = manifest.get("changelog")  # type: ignore[reportUnknownMemberType]
+	changelog: str | None = manifest.get("changelog")  # type: ignore[reportUnknownMemberType]
 	if changelog == "None":
 		# The config default is None
 		# which is parsed by configobj as a string not a NoneType
