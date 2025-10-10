@@ -38,6 +38,10 @@ def regenerateJsonFile(filePath: str, errorFilePath: str | None) -> None:
 		)
 
 		translatedChangelog = manifest.get("changelog")  # type: ignore[reportUnknownMemberType]
+		if translatedChangelog == "None":
+			# The config default is None
+			# which is parsed by configobj as a string not a NoneType
+			translatedChangelog = None
 		if translatedChangelog:
 			addonData["translations"].append(
 				{

@@ -93,7 +93,7 @@ class AddonManifest(ConfigObj):
 		if translatedInput is not None:
 			self._translatedConfig = ConfigObj(translatedInput, encoding="utf-8", default_encoding="utf-8")
 			for key in ("summary", "description", "changelog"):
-				val = self._translatedConfig.get(key)  # type: ignore[reportUnknownMemberType]
+				val: str | None = self._translatedConfig.get(key)  # type: ignore[reportUnknownMemberType]
 				if val:
 					self[key] = val
 

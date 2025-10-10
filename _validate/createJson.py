@@ -106,6 +106,7 @@ def _createDataclassMatchingJsonSchema(
 	for key in ("name", "summary", "description", "minimumNVDAVersion", "lastTestedNVDAVersion", "version"):
 		if key not in manifest:
 			raise KeyError(f"Manifest missing required key '{key}'.")
+
 	# Add optional fields
 	homepage = manifest.get("url")  # type: ignore[reportUnknownMemberType]
 	if homepage == "None":
