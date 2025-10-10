@@ -108,7 +108,7 @@ def _createDataclassMatchingJsonSchema(
 			raise KeyError(f"Manifest missing required key '{key}'.")
 
 	# Add optional fields
-	homepage | None = manifest.get("url")  # type: ignore[reportUnknownMemberType]
+	homepage: str | None = manifest.get("url")  # type: ignore[reportUnknownMemberType]
 	if homepage == "None":
 		# The config default is None
 		# which is parsed by configobj as a string not a NoneType
