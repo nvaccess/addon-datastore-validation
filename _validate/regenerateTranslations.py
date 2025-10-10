@@ -29,25 +29,19 @@ def regenerateJsonFile(filePath: str, errorFilePath: str | None) -> None:
 		# which is parsed by configobj as a string not a NoneType
 		changelog = None
 	for langCode, manifest in getAddonManifestLocalizations(manifest):
-		addonData["translations"].append(
-			{
-				"language": langCode,
-				"displayName": manifest["summary"],
-				"description": manifest["description"],
-			},
-		)
-
 		translatedChangelog = manifest.get("changelog")  # type: ignore[reportUnknownMemberType]
 		if translatedChangelog == "None":
 			# The config default is None
 			# which is parsed by configobj as a string not a NoneType
 			translatedChangelog = None
-		if translatedChangelog:
-			addonData["translations"].append(
-				{
-					"changelog": translatedChangelog,
-				},
-			)
+		addonData["translations"].append(
+			{
+				"language": langCode,
+				"displayName": manifest["summary"],
+				"description": manifest["description"],
+				"changelog": translatedChangelog,
+			},
+		)
 
 	with open(filePath, "wt", encoding="utf-8") as f:
 		json.dump(addonData, f, indent="\t", ensure_ascii=False)
