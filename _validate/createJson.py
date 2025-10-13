@@ -133,7 +133,7 @@ def _createDataclassMatchingJsonSchema(
 					"language": langCode,
 					"displayName": cast(str, translatedManifest["summary"]),
 					"description": cast(str, translatedManifest["description"]),
-					"changelog": translatedChangelog,
+					"changelog": cast(str, translatedChangelog),
 				},
 			)
 		except KeyError as e:
@@ -155,9 +155,9 @@ def _createDataclassMatchingJsonSchema(
 		publisher=publisher,
 		sourceURL=sourceUrl,
 		license=licenseName,
-		homepage=homepage,
-		changelog=changelog,
-		licenseURL=licenseUrl,
+		homepage=cast(str, homepage),
+		changelog=cast(str, changelog),
+		licenseURL=cast(str, licenseUrl),
 		submissionTime=getCurrentTime(),
 		translations=translations,
 	)
