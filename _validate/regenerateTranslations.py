@@ -6,6 +6,7 @@ import argparse
 import glob
 import json
 from urllib.request import urlretrieve
+from typing import cast
 
 from .manifestLoader import getAddonManifest, getAddonManifestLocalizations
 
@@ -39,7 +40,7 @@ def regenerateJsonFile(filePath: str, errorFilePath: str | None) -> None:
 				"language": langCode,
 				"displayName": manifest["summary"],
 				"description": manifest["description"],
-				"changelog": translatedChangelog,
+				"changelog": cast(str, translatedChangelog),
 			},
 		)
 
