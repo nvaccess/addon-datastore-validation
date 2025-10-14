@@ -21,7 +21,7 @@ class AddonData:
 	addonId: str
 	displayName: str
 	URL: str
-	description: str
+	description: str | None
 	sha256: str
 	addonVersionName: str
 	addonVersionNumber: dict[str, int]
@@ -133,7 +133,7 @@ def _createDataclassMatchingJsonSchema(
 					"language": langCode,
 					"displayName": cast(str, translatedManifest["summary"]),
 					"description": cast(str, translatedManifest["description"]),
-					"changelog": cast(str, translatedChangelog),
+					"changelog": translatedChangelog,
 				},
 			)
 		except KeyError as e:
@@ -155,9 +155,9 @@ def _createDataclassMatchingJsonSchema(
 		publisher=publisher,
 		sourceURL=sourceUrl,
 		license=licenseName,
-		homepage=cast(str, homepage),
-		changelog=cast(str, changelog),
-		licenseURL=cast(str, licenseUrl),
+		homepage=homepage,
+		changelog=changelog,
+		licenseURL=licenseUrl,
 		submissionTime=getCurrentTime(),
 		translations=translations,
 	)

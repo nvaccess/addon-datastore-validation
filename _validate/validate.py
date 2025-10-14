@@ -140,7 +140,7 @@ def checkChangelogMatches(manifest: AddonManifest, submission: JsonObjT) -> Vali
 	if changelog == "None":
 		# The config default is None which is parsed by configobj as a string not a NoneType
 		changelog = None
-	if cast(str, changelog) != submission.get("changelog"):
+	if changelog != submission.get("changelog"):
 		yield (
 			f"Submission 'changelog' must be set to '{manifest.get('changelog')}' "  # type: ignore[reportUnknownMemberType]
 			f"in json file instead of {submission.get('changelog')}"
@@ -153,7 +153,7 @@ def checkUrlMatchesHomepage(manifest: AddonManifest, submission: JsonObjT) -> Va
 	if manifestUrl == "None":
 		# The config default is None which is parsed by configobj as a string not a NoneType
 		manifestUrl = None
-	if cast(str, manifestUrl) != submission.get("homepage"):
+	if manifestUrl != submission.get("homepage"):
 		yield (
 			f"Submission 'homepage' must be set to '{manifest.get('url')}' "  # type: ignore[reportUnknownMemberType]
 			f"in json file instead of {submission.get('homepage')}"
