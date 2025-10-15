@@ -6,7 +6,6 @@ import argparse
 import glob
 import json
 from urllib.request import urlretrieve
-from typing import cast
 
 from .manifestLoader import getAddonManifest, getAddonManifestLocalizations
 
