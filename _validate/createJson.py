@@ -21,7 +21,7 @@ class AddonData:
 	addonId: str
 	displayName: str
 	URL: str
-	description: str | None
+	description: str
 	sha256: str
 	addonVersionName: str
 	addonVersionNumber: dict[str, int]
