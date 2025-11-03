@@ -120,7 +120,7 @@ def _createDataclassMatchingJsonSchema(
 
 	# Add optional fields
 	homepage: str | None = manifest.get("url")  # type: ignore[reportUnknownMemberType]
-	if homepage == "None":
+	if not homepage or homepage == "None":
 		# The config default is None
 		# which is parsed by configobj as a string not a NoneType
 		homepage = None
