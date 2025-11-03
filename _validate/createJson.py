@@ -76,7 +76,7 @@ def generateJsonFile(
 			dataclasses.asdict(
 				data,
 				# The JSON schema does not permit null values, but does contain optional keys.
-				# # We have already ensured that all required keys are present in the metadata,
+				# We have already ensured that all required keys are present in the metadata,
 				# So we can safely delete all keys whose value is None as optional.
 				dict_factory=lambda args: dict(filter(lambda item: item[1] is not None, args)),
 			),
