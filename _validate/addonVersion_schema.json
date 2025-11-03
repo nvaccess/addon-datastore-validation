@@ -126,7 +126,7 @@
 				"Makes doing XYZ easier"
 			],
 			"title": "The description (en) of the addon",
-			"type": ["string", "null"]
+			"type": "string"
 		},
 		"homepage": {
 			"$id": "#/properties/homepage",
