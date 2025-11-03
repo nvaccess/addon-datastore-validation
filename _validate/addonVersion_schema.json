@@ -137,7 +137,7 @@
 			],
 			"pattern": "^https:.*",
 			"title": "The homepage URL for the addon.",
-			"type": ["string", "null"]
+			"type": "string"
 		},
 		"minNVDAVersion": {
 			"$ref": "#/$defs/canonicalVersion",
@@ -228,7 +228,7 @@
 				"https://github.com/nvaccess/addon-datastore/license.MD"
 			],
 			"title": "The URL of the license",
-			"type": ["string", "null"]
+			"type": "string"
 		},
 		"changelog": {
 			"$id": "#/properties/changelog",
@@ -238,7 +238,7 @@
 				"New feature"
 			],
 			"title": "Add-on changelog (en)",
-			"type": ["string", "null"]
+			"type": "string"
 		},
 		"legacy": {
 			"$id": "#/properties/legacy",
@@ -406,7 +406,7 @@
 						"erleichtert das Durchführen von xyz"
 					],
 					"title": "The translated description",
-					"type": ["string", "null"]
+					"type": "string"
 				},
 				"changelog": {
 					"default": "",
@@ -415,7 +415,7 @@
 						"Neue Funktionen"
 					],
 					"title": "The translated changelog",
-					"type": ["string", "null"]
+					"type": "string"
 				}
 			}
 		}
