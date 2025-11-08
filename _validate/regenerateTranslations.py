@@ -34,7 +34,7 @@ def regenerateJsonFile(filePath: str, errorFilePath: str | None) -> None:
 			# The config default is None
 			# which is parsed by configobj as a string not a NoneType
 			translatedChangelog = None
-		translation: list[dict[str, str]] = {
+		translation: dict[str, str] = {
 			"language": langCode,
 			"displayName": manifest["summary"],
 			"description": manifest["description"],
