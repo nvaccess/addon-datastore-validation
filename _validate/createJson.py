@@ -72,6 +72,10 @@ def generateJsonFile(
 
 	filePath = buildOutputFilePath(data, parentDir)
 
+	translations = data.get("translations")
+	if translations is not None:
+		data["translations"] = stripEmptyChangelog(translations)
+
 	with open(filePath, "wt", encoding="utf-8") as f:
 		json.dump(
 			dataclasses.asdict(
@@ -144,7 +148,6 @@ def _createDataclassMatchingJsonSchema(
 					"language": langCode,
 					"displayName": cast(str, translatedManifest["summary"]),
 					"description": cast(str, translatedManifest["description"]),
-					"changelog": translatedChangelog,
 				},
 			)
 		except KeyError as e:
@@ -174,6 +177,19 @@ def _createDataclassMatchingJsonSchema(
 	)
 
 	return addonData
+
+
+def stripEmptyChangelog(translations: list[dict[str: str | None]]) -> list[dict[str: str]]:
+	"""Remove None changelogs from a list of translations.
+	return: A list of translations without None changelogs.
+	"""
+
+	cleanTranslations = []
+	for translation in translations:
+		if translation.get("changelog") is not None:
+			del translation["changelog"]
+		cleanTranslations.append(translation)
+	return cleanTranslations
 
 
 def main():
