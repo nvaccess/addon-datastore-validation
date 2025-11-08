@@ -35,7 +35,7 @@ class AddonData:
 	changelog: str | None
 	licenseURL: str | None
 	submissionTime: int
-	translations: list[dict[str, str | None]]
+	translations: list[dict[str, str]]
 
 
 def getSha256(addonPath: str) -> str:
