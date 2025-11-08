@@ -8,7 +8,6 @@ import json
 from urllib.request import urlretrieve
 
 from .manifestLoader import getAddonManifest, getAddonManifestLocalizations
-from .createJson import stripEmptyChangelog
 
 
 def regenerateJsonFile(filePath: str, errorFilePath: str | None) -> None:
@@ -43,8 +42,6 @@ def regenerateJsonFile(filePath: str, errorFilePath: str | None) -> None:
 				"changelog": translatedChangelog,
 			},
 		)
-	translations = stripEmptyChangelog(addonData["translations"])
-	addonData["translations"] = translations
 
 	with open(filePath, "wt", encoding="utf-8") as f:
 		json.dump(addonData, f, indent="\t", ensure_ascii=False)
