@@ -71,10 +71,7 @@ def generateJsonFile(
 	)
 
 	filePath = buildOutputFilePath(data, parentDir)
-
-	translations = data.get("translations")
-	if translations is not None:
-		data["translations"] = stripEmptyChangelog(translations)
+	data.translations = stripEmptyChangelog(data.translations)
 
 	with open(filePath, "wt", encoding="utf-8") as f:
 		json.dump(
@@ -179,7 +176,7 @@ def _createDataclassMatchingJsonSchema(
 	return addonData
 
 
-def stripEmptyChangelog(translations: list[dict[str: str | None]]) -> list[dict[str: str]]:
+def stripEmptyChangelog(translations: list[dict[str, str | None]]) -> list[dict[str, str]]:
 	"""Remove None changelogs from a list of translations.
 	return: A list of translations without None changelogs.
 	"""

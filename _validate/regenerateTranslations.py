@@ -43,9 +43,8 @@ def regenerateJsonFile(filePath: str, errorFilePath: str | None) -> None:
 				"changelog": translatedChangelog,
 			},
 		)
-	if len(addonData["translations"]) > 0:
-		translations = stripEmptyChangelog(addonData["translations"])
-		addonData["translations"] = translations
+	translations = stripEmptyChangelog(addonData["translations"])
+	addonData["translations"] = translations
 
 	with open(filePath, "wt", encoding="utf-8") as f:
 		json.dump(addonData, f, indent="\t", ensure_ascii=False)
