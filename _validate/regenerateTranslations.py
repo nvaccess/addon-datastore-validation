@@ -29,7 +29,7 @@ def regenerateJsonFile(filePath: str, errorFilePath: str | None) -> None:
 		# which is parsed by configobj as a string not a NoneType
 		changelog = None
 	for langCode, manifest in getAddonManifestLocalizations(manifest):
-		translatedChangelog: str | None = translatedManifest.get("changelog")  # type: ignore[reportUnknownMemberType]
+		translatedChangelog: str | None = manifest.get("changelog")  # type: ignore[reportUnknownMemberType]
 		if translatedChangelog == "None":
 			# The config default is None
 			# which is parsed by configobj as a string not a NoneType
