@@ -6,6 +6,7 @@ import argparse
 import glob
 import json
 from urllib.request import urlretrieve
+from typing import cast
 
 from .manifestLoader import getAddonManifest, getAddonManifestLocalizations
 
@@ -36,8 +37,8 @@ def regenerateJsonFile(filePath: str, errorFilePath: str | None) -> None:
 			translatedChangelog = None
 		translation: dict[str, str] = {
 			"language": langCode,
-			"displayName": manifest["summary"],
-			"description": manifest["description"],
+			"displayName": cast(str, manifest["summary"]),
+			"description": cast(str, manifest["description"]),
 		}
 		if translatedChangelog is not None:
 			translation["changelog"] = translatedChangelog
