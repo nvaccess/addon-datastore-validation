@@ -71,7 +71,6 @@ def generateJsonFile(
 	)
 
 	filePath = buildOutputFilePath(data, parentDir)
-	data.translations = stripEmptyChangelog(data.translations)
 
 	with open(filePath, "wt", encoding="utf-8") as f:
 		json.dump(
