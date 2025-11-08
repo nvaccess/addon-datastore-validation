@@ -177,19 +177,6 @@ def _createDataclassMatchingJsonSchema(
 	return addonData
 
 
-def stripEmptyChangelog(translations: list[dict[str, str | None]]) -> list[dict[str, str]]:
-	"""Remove None changelogs from a list of translations.
-	return: A list of translations without None changelogs.
-	"""
-
-	cleanTranslations = []
-	for translation in translations:
-		if translation.get("changelog") is not None:
-			del translation["changelog"]
-		cleanTranslations.append(translation)  # type: ignore[reportUnknownMemberType]
-	return cleanTranslations
-
-
 def main():
 	parser = argparse.ArgumentParser()
 	parser.add_argument(
