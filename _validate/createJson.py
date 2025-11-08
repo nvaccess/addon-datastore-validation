@@ -145,6 +145,7 @@ def _createDataclassMatchingJsonSchema(
 					"language": langCode,
 					"displayName": cast(str, translatedManifest["summary"]),
 					"description": cast(str, translatedManifest["description"]),
+					"changelog": translatedChangelog,
 				},
 			)
 		except KeyError as e:
