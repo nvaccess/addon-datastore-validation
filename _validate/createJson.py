@@ -176,7 +176,7 @@ def _createDataclassMatchingJsonSchema(
 	return addonData
 
 
-def stripEmptyChangelog(translations: list[dict[str, str | None]]) -> list[dict[str, str]]:  # type: ignore[reportUnknownMemberType]
+def stripEmptyChangelog(translations: list[dict[str, str | None]]) -> list[dict[str, str]]:
 	"""Remove None changelogs from a list of translations.
 	return: A list of translations without None changelogs.
 	"""
@@ -185,7 +185,7 @@ def stripEmptyChangelog(translations: list[dict[str, str | None]]) -> list[dict[
 	for translation in translations:
 		if translation.get("changelog") is not None:
 			del translation["changelog"]
-		cleanTranslations.append(translation)
+		cleanTranslations.append(translation)  # type: ignore[reportUnknownMemberType]
 	return cleanTranslations
 
 
