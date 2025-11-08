@@ -178,7 +178,7 @@ def _createDataclassMatchingJsonSchema(
 
 def stripEmptyChangelog(translations: list[dict[str, str | None]]) -> list[dict[str, str]]:
 	"""Remove None changelogs from a list of translations.
-	return: A list of translations without None changelogs.
+		return: A list of translations without None changelogs.
 	"""
 
 	cleanTranslations = []
