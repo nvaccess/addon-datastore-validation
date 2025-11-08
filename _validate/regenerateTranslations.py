@@ -34,14 +34,14 @@ def regenerateJsonFile(filePath: str, errorFilePath: str | None) -> None:
 			# The config default is None
 			# which is parsed by configobj as a string not a NoneType
 			translatedChangelog = None
-		addonData["translations"].append(
-			{
-				"language": langCode,
-				"displayName": manifest["summary"],
-				"description": manifest["description"],
-				"changelog": translatedChangelog,
-			},
-		)
+		translation: list[dict[str, str]] = {
+			"language": langCode,
+			"displayName": manifest["summary"],
+			"description": manifest["description"],
+		}
+		if translatedChangelog is not None:
+			translation["changelog"] = translatedChangelog
+		addonData["translations"].append(translation)
 
 	with open(filePath, "wt", encoding="utf-8") as f:
 		json.dump(addonData, f, indent="\t", ensure_ascii=False)
