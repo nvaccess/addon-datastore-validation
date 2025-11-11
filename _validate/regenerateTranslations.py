@@ -11,6 +11,7 @@ from typing import cast
 from .manifestLoader import getAddonManifest, getAddonManifestLocalizations
 from .validate import parseConfigValue
 
+
 def regenerateJsonFile(filePath: str, errorFilePath: str | None) -> None:
 	with open(filePath, encoding="utf-8") as f:
 		addonData = json.load(f)
