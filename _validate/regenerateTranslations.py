@@ -9,7 +9,7 @@ from urllib.request import urlretrieve
 from typing import cast
 
 from .manifestLoader import getAddonManifest, getAddonManifestLocalizations
-
+from .validate import parseConfigValue
 
 def regenerateJsonFile(filePath: str, errorFilePath: str | None) -> None:
 	with open(filePath, encoding="utf-8") as f:
@@ -25,11 +25,7 @@ def regenerateJsonFile(filePath: str, errorFilePath: str | None) -> None:
 				errorFile.write(f"Validation Errors:\n{manifest.errors}")
 		return
 	for langCode, manifest in getAddonManifestLocalizations(manifest):
-		translatedChangelog: str | None = manifest.get("changelog")  # type: ignore[reportUnknownMemberType]
-		if translatedChangelog == "None":
-			# The config default is None
-			# which is parsed by configobj as a string not a NoneType
-			translatedChangelog = None
+		translatedChangelog: str | None = parseConfigValue("changelog")
 		translation: dict[str, str] = {
 			"language": langCode,
 			"displayName": cast(str, manifest["summary"]),

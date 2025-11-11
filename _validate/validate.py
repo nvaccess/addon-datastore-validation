@@ -136,10 +136,7 @@ def checkDescriptionMatches(manifest: AddonManifest, submission: JsonObjT) -> Va
 
 def checkChangelogMatches(manifest: AddonManifest, submission: JsonObjT) -> ValidationErrorGenerator:
 	"""The submission changelog must match the *.nvda-addon manifest changelog field."""
-	changelog = manifest.get("changelog")  # type: ignore[reportUnknownMemberType]
-	if changelog == "None":
-		# The config default is None which is parsed by configobj as a string not a NoneType
-		changelog = None
+	changelog = parseConfigValue(manifest, "changelog")
 	if changelog != submission.get("changelog"):
 		yield (
 			f"Submission 'changelog' must be set to '{changelog}' in json file."
@@ -149,13 +146,10 @@ def checkChangelogMatches(manifest: AddonManifest, submission: JsonObjT) -> Vali
 
 def checkUrlMatchesHomepage(manifest: AddonManifest, submission: JsonObjT) -> ValidationErrorGenerator:
 	"""The submission homepage must match the *.nvda-addon manifest url field."""
-	manifestUrl = manifest.get("url")  # type: ignore[reportUnknownMemberType]
-	if manifestUrl == "None":
-		# The config default is None which is parsed by configobj as a string not a NoneType
-		manifestUrl = None
+	manifestUrl = parseConfigValue(manifest, "url")
 	if manifestUrl != submission.get("homepage"):
 		yield (
-			f"Submission 'homepage' must be set to '{manifest.get('url')}' "  # type: ignore[reportUnknownMemberType]
+			f"Submission 'homepage' must be set to '{manifestUrl}' "  # type: ignore[reportUnknownMemberType]
 			f"in json file instead of {submission.get('homepage')}"
 		)
 
@@ -183,6 +177,17 @@ def checkAddonId(
 			f"ID: {submission['addonId']}"
 		)
 
+def parseConfigValue(manifest: AddonManifest, configKey: str) -> None:
+	"""Converts a "None" config value to None.
+	:param manifest: An add-on manifest.
+	:param configKey: A key of an add-on manifest.
+	:return: The parsed value for the provided config key.
+	"""
+	configValue = manifest.get(configKey)  # type: ignore[reportUnknownMemberType]
+	if configValue == "None":
+		# The config default is None which is parsed by configobj as a string not a NoneType
+		configValue = None
+	return configValue
 
 VERSION_PARSE = re.compile(r"^(\d+)(?:$|(?:\.(\d+)$)|(?:\.(\d+)\.(\d+)$))")
 

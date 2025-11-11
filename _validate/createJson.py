@@ -14,6 +14,7 @@ from .addonManifest import AddonManifest, ApiVersionT
 from .manifestLoader import getAddonManifest, getAddonManifestLocalizations
 from .majorMinorPatch import MajorMinorPatch
 from .sha256 import sha256_checksum
+from .validate import parseConfigValue
 
 
 @dataclasses.dataclass
@@ -119,24 +120,12 @@ def _createDataclassMatchingJsonSchema(
 			raise KeyError(f"Manifest missing required key '{key}'.")
 
 	# Add optional fields
-	homepage: str | None = manifest.get("url")  # type: ignore[reportUnknownMemberType]
-	if not homepage or homepage == "None":
-		# The config default is None
-		# which is parsed by configobj as a string not a NoneType
-		homepage = None
-	changelog: str | None = manifest.get("changelog")  # type: ignore[reportUnknownMemberType]
-	if changelog == "None":
-		# The config default is None
-		# which is parsed by configobj as a string not a NoneType
-		changelog = None
+	homepage: str | None = parseConfigValue(manifest, "url")
+	changelog: str | None = parseConfigValue(manifest, "changelog")
 	translations: list[dict[str, str]] = []
 	for langCode, translatedManifest in getAddonManifestLocalizations(manifest):
 		# Add optional translated changelog.
-		translatedChangelog: str | None = translatedManifest.get("changelog")  # type: ignore[reportUnknownMemberType]
-		if translatedChangelog == "None":
-			# The config default is None
-			# which is parsed by configobj as a string not a NoneType
-			translatedChangelog = None
+		translatedChangelog: str | None = parseConfigValue(manifest, "changelog")
 
 		try:
 			translation: dict[str, str] = {
