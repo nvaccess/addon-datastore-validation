@@ -142,8 +142,8 @@ def checkChangelogMatches(manifest: AddonManifest, submission: JsonObjT) -> Vali
 		changelog = None
 	if changelog != submission.get("changelog"):
 		yield (
-			f"Submission 'changelog' must be set to '{changelog}' "
-			f"in json file instead of {submission.get('changelog')}"
+			f"Submission 'changelog' must be set to '{changelog}' in json file."
+			f" Instead got: '{submission.get('changelog')}'"
 		)
 
 
