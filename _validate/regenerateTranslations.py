@@ -11,6 +11,7 @@ from typing import cast
 from .manifestLoader import getAddonManifest, getAddonManifestLocalizations
 from .validate import parseConfigValue
 
+
 def regenerateJsonFile(filePath: str, errorFilePath: str | None) -> None:
 	with open(filePath, encoding="utf-8") as f:
 		addonData = json.load(f)
@@ -25,7 +26,7 @@ def regenerateJsonFile(filePath: str, errorFilePath: str | None) -> None:
 				errorFile.write(f"Validation Errors:\n{manifest.errors}")
 		return
 	for langCode, manifest in getAddonManifestLocalizations(manifest):
-		translatedChangelog: str | None = parseConfigValue("changelog")
+		translatedChangelog: str | None = parseConfigValue(manifest, "changelog")
 		translation: dict[str, str] = {
 			"language": langCode,
 			"displayName": cast(str, manifest["summary"]),

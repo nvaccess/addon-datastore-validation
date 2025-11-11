@@ -149,8 +149,8 @@ def checkUrlMatchesHomepage(manifest: AddonManifest, submission: JsonObjT) -> Va
 	manifestUrl = parseConfigValue(manifest, "url")
 	if manifestUrl != submission.get("homepage"):
 		yield (
-			f"Submission 'homepage' must be set to '{manifestUrl}' "  # type: ignore[reportUnknownMemberType]
-			f"in json file instead of {submission.get('homepage')}"
+			f"Submission 'homepage' must be set to '{manifestUrl}' in json file."
+			f" Instead got: {submission.get('homepage')}"
 		)
 
 
@@ -177,7 +177,8 @@ def checkAddonId(
 			f"ID: {submission['addonId']}"
 		)
 
-def parseConfigValue(manifest: AddonManifest, configKey: str) -> None:
+
+def parseConfigValue(manifest: AddonManifest, configKey: str) -> str | None:
 	"""Converts a "None" config value to None.
 	:param manifest: An add-on manifest.
 	:param configKey: A key of an add-on manifest.
@@ -187,7 +188,8 @@ def parseConfigValue(manifest: AddonManifest, configKey: str) -> None:
 	if configValue == "None":
 		# The config default is None which is parsed by configobj as a string not a NoneType
 		configValue = None
-	return configValue
+	return configValue  # type: ignore[reportUnknownMemberType]
+
 
 VERSION_PARSE = re.compile(r"^(\d+)(?:$|(?:\.(\d+)$)|(?:\.(\d+)\.(\d+)$))")
 

@@ -172,8 +172,8 @@ class Validate_checkChangelogMatches(unittest.TestCase):
 		self.assertEqual(
 			errors,
 			[
-				f"Submission 'changelog' must be set to '{self.manifest['changelog']}' in json file"
-				f" instead of {badChangelog}",
+				f"Submission 'changelog' must be set to '{self.manifest['changelog']}' in json file."
+				f" Instead got: '{badChangelog}'",
 			],
 		)
 
