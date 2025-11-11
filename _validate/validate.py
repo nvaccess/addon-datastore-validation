@@ -180,15 +180,16 @@ def checkAddonId(
 
 def parseConfigValue(manifest: AddonManifest, configKey: str) -> str | None:
 	"""Converts a "None" config value to None.
-	:param manifest: An add-on manifest.
-	:param configKey: A key of an add-on manifest.
-	:return: The parsed value for the provided config key.
+		:param manifest: An add-on manifest.
+		:param configKey: A key of an add-on manifest.
+		:return: The parsed value for the provided config key.
 	"""
 	configValue = manifest.get(configKey)  # type: ignore[reportUnknownMemberType]
 	if configValue == "None":
 		# The config default is None which is parsed by configobj as a string not a NoneType
 		configValue = None
 	return configValue  # type: ignore[reportUnknownMemberType]
+
 
 
 VERSION_PARSE = re.compile(r"^(\d+)(?:$|(?:\.(\d+)$)|(?:\.(\d+)\.(\d+)$))")
