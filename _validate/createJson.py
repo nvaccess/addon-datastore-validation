@@ -125,7 +125,7 @@ def _createDataclassMatchingJsonSchema(
 	translations: list[dict[str, str]] = []
 	for langCode, translatedManifest in getAddonManifestLocalizations(manifest):
 		# Add optional translated changelog.
-		translatedChangelog: str | None = parseConfigValue(manifest, "changelog")
+		translatedChangelog: str | None = parseConfigValue(translatedManifest, "changelog")
 
 		try:
 			translation: dict[str, str] = {
