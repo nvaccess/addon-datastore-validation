@@ -7,9 +7,8 @@ import glob
 import json
 from urllib.request import urlretrieve
 from dataclasses import asdict
-from typing import cast
 
-from .manifestLoader import getAddonManifest, getAddonManifestLocalizations
+from .manifestLoader import getAddonManifest
 from .validate import checkSha256
 from .createJson import _createDataclassMatchingJsonSchema
 
@@ -25,7 +24,7 @@ def regenerateJsonFile(filePath: str, errorFilePath: str | None) -> None:
 	if checksumErrors:
 		if errorFilePath:
 			with open(errorFilePath, "a") as errorFile:
-				errorFile.write(f"Validation errors:\n{"\n".join(checksumErrors)}")
+				errorFile.write(f"Validation errors:\n{'\n'.join(checksumErrors)}")
 		return
 	manifest = getAddonManifest(addonFilePath)
 	if manifest.errors:
@@ -33,7 +32,16 @@ def regenerateJsonFile(filePath: str, errorFilePath: str | None) -> None:
 			with open(errorFilePath, "a") as errorFile:
 				errorFile.write(f"Validation Errors:\n{manifest.errors}")
 		return
-	regeneratedData = _createDataclassMatchingJsonSchema(manifest, addonSha, addonData["channel"], addonData["publisher"], addonData["sourceURL"], addonData["URL"], addonData["license"], addonData["licenseURL"])
+	regeneratedData = _createDataclassMatchingJsonSchema(
+		manifest,
+		addonSha,
+		addonData["channel"],
+		addonData["publisher"],
+		addonData["sourceURL"],
+		addonData["URL"],
+		addonData["license"],
+		addonData["licenseURL"],
+	)
 	submissionTime = addonData.get("submissionTime")
 	regeneratedAddonData = asdict(
 		regeneratedData,
