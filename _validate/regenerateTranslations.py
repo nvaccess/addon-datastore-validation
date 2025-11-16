@@ -1,4 +1,4 @@
-# Copyright (C) 2023-2025 NV Access Limited
+# Copyright (C) 2023-2025 NV Access Limited, Noelia Ruiz Martínez
 # This file may be used under the terms of the GNU General Public License, version 2 or later.
 # For more details see: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -6,10 +6,12 @@ import argparse
 import glob
 import json
 from urllib.request import urlretrieve
+from dataclasses import asdict
 from typing import cast
 
 from .manifestLoader import getAddonManifest, getAddonManifestLocalizations
-from .validate import parseConfigValue
+from .validate import checkSha256
+from .createJson import _createDataclassMatchingJsonSchema
 
 
 def regenerateJsonFile(filePath: str, errorFilePath: str | None) -> None:
@@ -17,27 +19,33 @@ def regenerateJsonFile(filePath: str, errorFilePath: str | None) -> None:
 		addonData = json.load(f)
 	if addonData.get("legacy"):
 		return
-	addonData["translations"] = []
 	addonFilePath, _ = urlretrieve(addonData["URL"])
+	addonSha = addonData["sha256"]
+	checksumErrors = list(checkSha256(addonFilePath, addonSha))
+	if checksumErrors:
+		if errorFilePath:
+			with open(errorFilePath, "a") as errorFile:
+				errorFile.write(f"Validation errors:\n{"\n".join(checksumErrors)}")
+		return
 	manifest = getAddonManifest(addonFilePath)
 	if manifest.errors:
 		if errorFilePath:
-			with open(errorFilePath, "w") as errorFile:
+			with open(errorFilePath, "a") as errorFile:
 				errorFile.write(f"Validation Errors:\n{manifest.errors}")
 		return
-	for langCode, manifest in getAddonManifestLocalizations(manifest):
-		translatedChangelog: str | None = parseConfigValue(manifest, "changelog")
-		translation: dict[str, str] = {
-			"language": langCode,
-			"displayName": cast(str, manifest["summary"]),
-			"description": cast(str, manifest["description"]),
-		}
-		if translatedChangelog is not None:
-			translation["changelog"] = translatedChangelog
-		addonData["translations"].append(translation)
-
+	regeneratedData = _createDataclassMatchingJsonSchema(manifest, addonSha, addonData["channel"], addonData["publisher"], addonData["sourceURL"], addonData["URL"], addonData["license"], addonData["licenseURL"])
+	submissionTime = addonData.get("submissionTime")
+	regeneratedAddonData = asdict(
+		regeneratedData,
+		# The JSON schema does not permit null values, but does contain optional keys.
+		# We have already ensured that all required keys are present in the metadata,
+		# So we can safely delete all keys whose value is None as optional.
+		dict_factory=lambda args: dict(filter(lambda item: item[1] is not None, args)),
+	)
+	if submissionTime:
+		regeneratedAddonData["submissionTime"] = submissionTime
 	with open(filePath, "wt", encoding="utf-8") as f:
-		json.dump(addonData, f, indent="\t", ensure_ascii=False)
+		json.dump(regeneratedAddonData, f, indent="\t", ensure_ascii=False)
 	print(f"Wrote json file: {filePath}")
 
 
