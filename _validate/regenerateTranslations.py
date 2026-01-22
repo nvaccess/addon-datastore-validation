@@ -10,7 +10,7 @@ from dataclasses import asdict
 
 from .manifestLoader import getAddonManifest
 from .validate import checkSha256
-from .createJson import _createDataclassMatchingJsonSchema
+from .createJson import createDataclassMatchingJsonSchema
 
 
 def regenerateJsonFile(filePath: str, errorFilePath: str | None) -> None:
@@ -32,7 +32,7 @@ def regenerateJsonFile(filePath: str, errorFilePath: str | None) -> None:
 			with open(errorFilePath, "a") as errorFile:
 				errorFile.write(f"Validation Errors:\n{manifest.errors}")
 		return
-	regeneratedData = _createDataclassMatchingJsonSchema(
+	regeneratedData = createDataclassMatchingJsonSchema(
 		manifest,
 		addonSha,
 		addonData["channel"],
